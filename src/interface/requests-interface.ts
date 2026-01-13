@@ -1,7 +1,7 @@
 export interface SolicitacaoInput {
-  endereco: string;
-  pontoReferencia?: string;
-  descricao: string;
+  address: string;
+  landmark?: string;
+  description: string;
   imagemUrl?: string;
 }
 
@@ -12,10 +12,10 @@ export interface CriarSolicitacaoData {
 
 export interface SolicitacaoFormatada {
   id: number;
-  endereco: string;
-  referencia: string | null;
-  problema: string;
+  adress: string;
+  reference: string | null;
+  problem: string;
   status: string;
-  dataSolicitacao: string | null;
-  dataConclusao: string | null;
+  dateRequest: string | null;
+  dateCompletion: string | null;
 }

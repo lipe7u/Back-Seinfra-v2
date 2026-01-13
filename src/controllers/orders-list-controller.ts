@@ -1,7 +1,7 @@
 import { prisma } from "../server";
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ordersqueryschema } from "../validators/orders-query";
-import { number } from "zod";
+ 
 
 
 
@@ -32,7 +32,7 @@ export const SolicitarOrdersInfo = async(
   }
 }
 
-export const CancelarOrdem = async (request: FastifyRequest, reply: FastifyReply) => {
+export const cancelOrder = async (request: FastifyRequest, reply: FastifyReply) => {
     const body = request.body as { id_ordem?: number; justificativa?: string };
 
     if (!body.id_ordem) {

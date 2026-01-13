@@ -4,16 +4,16 @@ import { SolicitacaoInput, CriarSolicitacaoData, SolicitacaoFormatada } from "..
 const prisma = new PrismaClient();
 
 export class SolicitacoesService {
-  static async CriarSolicitacao({ body, userId }: CriarSolicitacaoData) {
+  static async CreateRequest({ body, userId }: CriarSolicitacaoData) {
     const setorResponsavel = 2;
 
     const solicitacao = await prisma.registro_ordens.create({
       data: {
         id_solicitante: userId,
         setor_resp: setorResponsavel,
-        endereco: body.endereco,
-        referencia: body.pontoReferencia,
-        descricao: body.descricao,
+        endereco: body.address,
+        referencia: body.landmark,
+        descricao: body.description,
         status: "PENDENTE",
         data_criacao: new Date(),
       },
@@ -35,7 +35,7 @@ export class SolicitacoesService {
     };
   }
 
-  static async ListarSolicitacoes(userId: number): Promise<SolicitacaoFormatada[]> {
+  static async ListRequests(userId: number): Promise<SolicitacaoFormatada[]> {
     const solicitacoes = await prisma.registro_ordens.findMany({
       where: {
         id_solicitante: userId,
@@ -71,12 +71,12 @@ export class SolicitacoesService {
         telefone: s.usuarios?.telefone ?? null,
         cpf: s.usuarios?.cpf ?? null,
       },
-      endereco: s.endereco,
-      referencia: s.referencia,
-      problema: s.descricao.slice(0, 200) + (s.descricao.length > 200 ? "..." : ""),
+      adress: s.endereco, 
+      reference: s.referencia,
+      problem: s.descricao.slice(0, 200) + (s.descricao.length > 200 ? "..." : ""),
       status: this.formatarStatus(s.status),
-      dataSolicitacao: s.data_criacao ? s.data_criacao.toLocaleDateString("pt-BR") : null,
-      dataConclusao: s.data_conclusao?.toLocaleDateString("pt-BR") ?? null,
+      dateRequest: s.data_criacao ? s.data_criacao.toLocaleDateString("pt-BR") : null,
+      dateCompletion: s.data_conclusao?.toLocaleDateString("pt-BR") ?? null,
     }));
 
     return solicitacoesFormatadas;
