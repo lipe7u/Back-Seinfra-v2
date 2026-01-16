@@ -8,7 +8,7 @@ import {
 } from "../controllers/solicitacoes-controller";
 import { generateRequestsPdf } from "../controllers/pdfController";
 import { cancelOrder } from "../controllers/orders-list-controller";
-import { SolicitarOrdersInfo } from "../controllers/orders-list-controller";
+import { requestOrdersInfo } from "../controllers/orders-list-controller";
 import { loginAdmin } from "../controllers/login-admin-controller";
 
 export default async function GlobalRoutes(app: FastifyInstance) {
@@ -18,7 +18,7 @@ export default async function GlobalRoutes(app: FastifyInstance) {
   app.post("/novaSolicitacao", CreateRequests);
   app.get("/minhas-solicitacoes", ListRequests);
   app.get("/gerarPdfSolicitacoes", generateRequestsPdf);
-  app.get("/solicitarOrdens", SolicitarOrdersInfo);
+  app.get("/solicitarOrdens", requestOrdersInfo);
   app.post("/cancelarOrdem", cancelOrder);
   app.post("/login-admin", loginAdmin)
   console.log("Rotas de autenticação e solicitação registradas!");
