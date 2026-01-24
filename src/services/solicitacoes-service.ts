@@ -7,7 +7,7 @@ export class SolicitacoesService {
   static async CreateRequest({ body, userId }: CriarSolicitacaoData) {
     const setorResponsavel = 2;
 
-    const solicitacao = await prisma.registro_ordens.create({
+    const request = await prisma.registro_ordens.create({
       data: {
         id_solicitante: userId,
         setor_resp: setorResponsavel,
@@ -22,21 +22,21 @@ export class SolicitacoesService {
     if (body.imagemUrl && body.imagemUrl.trim() !== "") {
       await prisma.imagens_ordens.create({
         data: {
-          id_os: solicitacao.id_ordem,
+          id_os: request.id_ordem,
           caminho_arquivo: body.imagemUrl,
         },
       });
     }
 
     return {
-      id: solicitacao.id_ordem,
+      id: request.id_ordem,
       mensagem: "Solicitação criada com sucesso",
-      solicitacao,
+      request,
     };
   }
 
   static async ListRequests(userId: number): Promise<SolicitacaoFormatada[]> {
-    const solicitacoes = await prisma.registro_ordens.findMany({
+    const requests = await prisma.registro_ordens.findMany({
       where: {
         id_solicitante: userId,
         
@@ -64,7 +64,7 @@ export class SolicitacoesService {
       },
     });
 
-    const solicitacoesFormatadas: SolicitacaoFormatada[] = solicitacoes.map((s: typeof solicitacoes[number]) => ({
+    const formattedRequests: SolicitacaoFormatada[] = requests.map((s: typeof requests[number]) => ({
       id: s.id_ordem,
       solicitante: {
         nome: s.usuarios?.nome ?? null,
@@ -74,15 +74,15 @@ export class SolicitacoesService {
       adress: s.endereco, 
       reference: s.referencia,
       problem: s.descricao.slice(0, 200) + (s.descricao.length > 200 ? "..." : ""),
-      status: this.formatarStatus(s.status),
+      status: this.formatStatus(s.status),
       dateRequest: s.data_criacao ? s.data_criacao.toLocaleDateString("pt-BR") : null,
       dateCompletion: s.data_conclusao?.toLocaleDateString("pt-BR") ?? null,
     }));
 
-    return solicitacoesFormatadas;
+    return formattedRequests;
   }
 
-  private static formatarStatus(status: string): string {
+  private static formatStatus(status: string): string {
     const statusMap: Record<string, string> = {
       FINALIZADA: "Finalizada",
       EM_EXECUCAO: "Em execução",

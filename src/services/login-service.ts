@@ -37,8 +37,8 @@ export const loginAdminService = async (app: FastifyInstance, data: LoginAdminB)
   if (!admin || !admin.Admin) {
     throw new Error("Admin não encontrado");
   }
-  const senhaValida = await bcrypt.compare(data.senha, admin.senha_hash || "");
-  if (!senhaValida) {
+  const validPassword = await bcrypt.compare(data.senha, admin.senha_hash || "");
+  if (!validPassword) {
     throw new Error("Senha incorreta");
   }
   const token = app.jwt.sign({id: admin.id_user, Admin: admin.Admin})
