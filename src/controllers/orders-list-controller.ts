@@ -1,7 +1,7 @@
 import { prisma } from "../server";
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ordersqueryschema } from "../validators/orders-query";
-import { number } from "zod";
+
 
 
 
@@ -64,3 +64,36 @@ export const CancelarOrdem = async (request: FastifyRequest, reply: FastifyReply
     reply.send(`ordem "${ordem_cancelada.id_ordem}" de descrição "${ordem_cancelada.descricao}" foi cancelada. -${ordem_cancelada.Justificativa}`);
 };
 
+export const changeStatusOrder = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+  const body = request.body as {
+    id_ordem?: number;
+    status?: "PENDENTE" | "EM_EXECUCAO" | "CONCLUIDO";
+  };
+
+  if (!body.id_ordem || !body.status) {
+    return reply.status(400).send("ID da ordem e status são obrigatórios");
+  }
+
+  const order = await prisma.registro_ordens.findUnique({
+    where: { id_ordem: body.id_ordem },
+  });
+
+  if (!order) {
+    return reply.status(404).send("Ordem não encontrada");
+  }
+
+  const updateOrder = await prisma.registro_ordens.update({
+    where: { id_ordem: body.id_ordem },
+    data: {
+      status: body.status,
+    },
+  });
+
+  return reply.send({
+    message: "Status atualizado com sucesso",
+    ordem: updateOrder,
+  });
+};
