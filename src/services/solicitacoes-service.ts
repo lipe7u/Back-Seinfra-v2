@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client";
-import { SolicitacaoInput, CriarSolicitacaoData, SolicitacaoFormatada } from "../interface/requests-interface";
+import { CreateRequestDate, FormattedRequest } from "../interface/requests-interface";
 
 const prisma = new PrismaClient();
 
 export class SolicitacoesService {
-  static async CreateRequest({ body, userId }: CriarSolicitacaoData) {
+  static async CreateRequest({ body, userId }: CreateRequestDate) {
     const setorResponsavel = 2;
 
     const request = await prisma.registro_ordens.create({
@@ -35,7 +35,7 @@ export class SolicitacoesService {
     };
   }
 
-  static async ListRequests(userId: number): Promise<SolicitacaoFormatada[]> {
+  static async ListRequests(userId: number): Promise<FormattedRequest[]> {
     const requests = await prisma.registro_ordens.findMany({
       where: {
         id_solicitante: userId,
@@ -64,7 +64,7 @@ export class SolicitacoesService {
       },
     });
 
-    const formattedRequests: SolicitacaoFormatada[] = requests.map((s: typeof requests[number]) => ({
+    const formattedRequests: FormattedRequest[] = requests.map((s: typeof requests[number]) => ({
       id: s.id_ordem,
       solicitante: {
         nome: s.usuarios?.nome ?? null,
