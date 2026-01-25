@@ -1,12 +1,12 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { CriarSolicitacaoSchema } from "../validators/validations";
-import { SolicitacaoInput } from "../interface/requests-interface";
+import { RequestInput } from "../interface/requests-interface";
 import { SolicitacoesService } from "../services/solicitacoes-service";
 import { z } from "zod";
 
 
 export const CreateRequests = async (
-  request: FastifyRequest<{ Body: SolicitacaoInput }>,
+  request: FastifyRequest<{ Body: RequestInput }>,
   reply: FastifyReply
 ) => {
   try {

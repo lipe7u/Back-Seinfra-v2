@@ -13,9 +13,9 @@ export interface CreateRequestDate {
 export interface FormattedRequest {
   id: number;
   adress: string;
-  reference: string | null;
+  landmark: string | null;
   problem: string;
   status: string;
   dateRequest: string | null;
-  dateCompletion: string | null;
+  dateRequestConcluded: string | null;
 }

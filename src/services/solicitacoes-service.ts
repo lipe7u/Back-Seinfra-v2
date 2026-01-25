@@ -72,11 +72,11 @@ export class SolicitacoesService {
         cpf: s.usuarios?.cpf ?? null,
       },
       adress: s.endereco, 
-      reference: s.referencia,
+      landmark: s.referencia,
       problem: s.descricao.slice(0, 200) + (s.descricao.length > 200 ? "..." : ""),
       status: this.formatStatus(s.status),
       dateRequest: s.data_criacao ? s.data_criacao.toLocaleDateString("pt-BR") : null,
-      dateCompletion: s.data_conclusao?.toLocaleDateString("pt-BR") ?? null,
+      dateRequestConcluded: s.data_conclusao?.toLocaleDateString("pt-BR") ?? null,
     }));
 
     return formattedRequests;

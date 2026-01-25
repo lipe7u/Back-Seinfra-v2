@@ -10,7 +10,7 @@ export const loginAdmin = async (
     const token = await loginAdminService(reply.server, request.body);
     reply.code(200).send({token});
   } catch (error) {
-    const mensage = error instanceof Error ? error.message : "Erro no login";
-    reply.code(401).send({ error: mensage });
+    const message = error instanceof Error ? error.message : "Erro no login";
+    reply.code(401).send({ error: message });
   }
 };
