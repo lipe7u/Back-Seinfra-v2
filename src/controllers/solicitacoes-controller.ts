@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { CriarSolicitacaoSchema } from "../validators/validations";
+import { CreateRequestSchema } from "../validators/validations";
 import { RequestInput } from "../interface/requests-interface";
-import { SolicitacoesService } from "../services/solicitacoes-service";
+import { RequestsService } from "../services/solicitacoes-service";
 import { z } from "zod";
 
 
@@ -10,10 +10,10 @@ export const CreateRequests = async (
   reply: FastifyReply
 ) => {
   try {
-    const body = CriarSolicitacaoSchema.parse(request.body);
+    const body = CreateRequestSchema.parse(request.body);
     const { id: userId } = request.user as { id: number; Admin: boolean };
     
-    const result = await SolicitacoesService.CreateRequest({
+    const result = await RequestsService.CreateRequest({
       body,
       userId
     })
@@ -35,7 +35,7 @@ export const ListRequests  = async (
 ) => {
   try {
     const { id: id_user } = request.user as { id: number; Admin: boolean };
-    const requests = await SolicitacoesService.ListRequests(id_user);
+    const requests = await RequestsService.ListRequests(id_user);
     return reply.send(requests)
 
   } catch (error) {
