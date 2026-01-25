@@ -4,12 +4,12 @@ import { prisma } from "../server";
 
 export const registerUserService = async (data: RegisterB) => {
   try {
-    const passwordHashed = await bcrypt.hash(data.senha, 10);
+    const passwordHashed = await bcrypt.hash(data.password, 10);
     const user = await prisma.usuarios.create({
       data: {
         cpf: data.cpf,
-        nome: data.nome,
-        telefone: data.telefone,
+        nome: data.name,
+        telefone: data.phone,
         senha_hash: passwordHashed,
       },
     });
@@ -22,12 +22,12 @@ export const registerUserService = async (data: RegisterB) => {
 
 export const registerAdminService = async (data: RegisterAdminB) => {
   try {
-    const passwordHashed = await bcrypt.hash(data.senha, 10);
+    const passwordHashed = await bcrypt.hash(data.password, 10);
     const admin = await prisma.usuarios.create({
       data: {
         cpf: data.cpf,
         senha_hash: passwordHashed,
-        telefone: data.telefone,
+        telefone: data.phone,
         Admin: true,
       },
     });
