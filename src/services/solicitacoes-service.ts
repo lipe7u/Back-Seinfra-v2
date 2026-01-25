@@ -3,7 +3,7 @@ import { CreateRequestDate, FormattedRequest } from "../interface/requests-inter
 
 const prisma = new PrismaClient();
 
-export class SolicitacoesService {
+export class RequestsService {
   static async CreateRequest({ body, userId }: CreateRequestDate) {
     const setorResponsavel = 2;
 
@@ -18,16 +18,7 @@ export class SolicitacoesService {
         data_criacao: new Date(),
       },
     });
-
-    if (body.imagemUrl && body.imagemUrl.trim() !== "") {
-      await prisma.imagens_ordens.create({
-        data: {
-          id_os: request.id_ordem,
-          caminho_arquivo: body.imagemUrl,
-        },
-      });
-    }
-
+    
     return {
       id: request.id_ordem,
       mensagem: "Solicitação criada com sucesso",

@@ -2,7 +2,6 @@ export interface RequestInput {
   address: string;
   landmark?: string;
   description: string;
-  imagemUrl?: string;
 }
 
 export interface CreateRequestDate {
