@@ -1,25 +1,25 @@
 export interface RegisterB {
   cpf: string; 
-  nome: string;
-  telefone: string; 
-  senha: string; 
+  name: string;
+  phone: string; 
+  password: string; 
 }
 
 export interface LoginB {
   cpf?: string;
-  telefone?: string;
-  senha: string;
+  phone?: string;
+  password: string;
 }
 
 export interface LoginAdminB {
   cpf: string;
-  senha: string;
+  password: string;
 }
 
 export interface RegisterAdminB {
   cpf: string; 
-  senha: string; 
-  telefone: string;
+  password: string; 
+  phone: string;
 }
 
 

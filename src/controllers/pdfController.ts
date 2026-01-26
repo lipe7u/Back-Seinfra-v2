@@ -9,7 +9,7 @@ export const generateRequestsPdf = async (
   try {
     const { id: id_user } = request.user as { id: number; Admin: boolean };
 
-    const solicitacoes = await prisma.registro_ordens.findMany({
+    const requests = await prisma.registro_ordens.findMany({
       where: {
         id_solicitante: id_user,
         status: "FINALIZADA",
@@ -28,13 +28,13 @@ export const generateRequestsPdf = async (
       },
     });
 
-    if (solicitacoes.length === 0) {
+    if (requests.length === 0) {
       return reply
         .status(404)
         .send({ error: "Nenhuma solicitação finalizada encontrada." });
     }
 
-    const usuario = await prisma.usuarios.findUnique({
+    const user = await prisma.usuarios.findUnique({
       where: {
         id_user: id_user,
       },
@@ -45,11 +45,11 @@ export const generateRequestsPdf = async (
       },
     });
 
-    if (!usuario) {
+    if (!user) {
       return reply.status(404).send({ error: "Usuário não encontrado." });
     }
 
-    for (const solicitacao of solicitacoes) {
+    for (const request of requests) {
       const pdfDoc = await PDFDocument.create();
       const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
       const page = pdfDoc.addPage();
@@ -73,12 +73,12 @@ export const generateRequestsPdf = async (
         });
       }
 
-      const corPreta = rgb(0, 0, 0);
+      const blackColor = rgb(0, 0, 0);
 
       drawText(
         "Relatório de Solicitação Finalizada",
         20,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
@@ -88,34 +88,34 @@ export const generateRequestsPdf = async (
       drawText(
         "Informações do Usuário:",
         15,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
       );
       next_pos += 20;
       drawText(
-        `Nome: ${usuario.nome}`,
+        `Nome: ${user.nome}`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
       );
       next_pos += 15;
       drawText(
-        `CPF: ${usuario.cpf}`,
+        `CPF: ${user.cpf}`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
       );
       next_pos += 15;
       drawText(
-        `Telefone: ${usuario.telefone}`,
+        `Telefone: ${user.telefone}`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
@@ -125,63 +125,63 @@ export const generateRequestsPdf = async (
       drawText(
         "Informações sobre a Ordem de Serviço:",
         15,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
       );
       next_pos += 20;
       drawText(
-        `ID da Ordem: ${solicitacao.id_ordem}`,
+        `ID da Ordem: ${request.id_ordem}`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
       );
       next_pos += 15;
       drawText(
-        `Endereço: ${solicitacao.endereco}`,
+        `Endereço: ${request.endereco}`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
       );
       next_pos += 15;
       drawText(
-        `Ponto de Referência: ${solicitacao.referencia || "Não informado"}`,
+        `Ponto de Referência: ${request.referencia || "Não informado"}`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
       );
       next_pos += 15;
       drawText(
-        `Descrição: ${solicitacao.descricao}`,
+        `Descrição: ${request.descricao}`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
       );
       next_pos += 15;
       drawText(
-        `Status: ${solicitacao.status}`,
+        `Status: ${request.status}`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
       );
       next_pos += 15;
       drawText(
-        `Data de Criação: ${solicitacao.data_criacao?.toLocaleDateString(
+        `Data de Criação: ${request.data_criacao?.toLocaleDateString(
           "pt-BR"
         )}`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
@@ -189,12 +189,12 @@ export const generateRequestsPdf = async (
       next_pos += 15;
       drawText(
         `Data de Conclusão: ${
-          solicitacao.data_conclusao
-            ? solicitacao.data_conclusao.toLocaleDateString("pt-BR")
+          request.data_conclusao
+            ? request.data_conclusao.toLocaleDateString("pt-BR")
             : "Não concluída"
         }`,
         12,
-        corPreta,
+        blackColor,
         timesRomanFont,
         30,
         height - next_pos
@@ -203,12 +203,12 @@ export const generateRequestsPdf = async (
 
       const pdfBytes = await pdfDoc.save();
 
-      const nomeArquivo = `solicitacao_${solicitacao.id_ordem}.pdf`;
+      const fileName = `solicitacao_${request.id_ordem}.pdf`;
 
       reply.header("Content-Type", "application/pdf");
       reply.header(
         "Content-Disposition",
-        `attachment; filename=${nomeArquivo}`
+        `attachment; filename=${fileName}`
       );
       reply.send(pdfBytes);
     }

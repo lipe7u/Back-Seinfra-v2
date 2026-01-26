@@ -1,42 +1,33 @@
 import { PrismaClient } from "@prisma/client";
-import { SolicitacaoInput, CriarSolicitacaoData, SolicitacaoFormatada } from "../interface/requests-interface";
+import { CreateRequestDate, FormattedRequest } from "../interface/requests-interface";
 
 const prisma = new PrismaClient();
 
-export class SolicitacoesService {
-  static async CriarSolicitacao({ body, userId }: CriarSolicitacaoData) {
+export class RequestsService {
+  static async CreateRequest({ body, userId }: CreateRequestDate) {
     const setorResponsavel = 2;
 
-    const solicitacao = await prisma.registro_ordens.create({
+    const request = await prisma.registro_ordens.create({
       data: {
         id_solicitante: userId,
         setor_resp: setorResponsavel,
-        endereco: body.endereco,
-        referencia: body.pontoReferencia,
-        descricao: body.descricao,
+        endereco: body.address,
+        referencia: body.landmark,
+        descricao: body.description,
         status: "PENDENTE",
         data_criacao: new Date(),
       },
     });
-
-    if (body.imagemUrl && body.imagemUrl.trim() !== "") {
-      await prisma.imagens_ordens.create({
-        data: {
-          id_os: solicitacao.id_ordem,
-          caminho_arquivo: body.imagemUrl,
-        },
-      });
-    }
-
+    
     return {
-      id: solicitacao.id_ordem,
+      id: request.id_ordem,
       mensagem: "Solicitação criada com sucesso",
-      solicitacao,
+      request,
     };
   }
 
-  static async ListarSolicitacoes(userId: number): Promise<SolicitacaoFormatada[]> {
-    const solicitacoes = await prisma.registro_ordens.findMany({
+  static async ListRequests(userId: number): Promise<FormattedRequest[]> {
+    const requests = await prisma.registro_ordens.findMany({
       where: {
         id_solicitante: userId,
         
@@ -64,25 +55,25 @@ export class SolicitacoesService {
       },
     });
 
-    const solicitacoesFormatadas: SolicitacaoFormatada[] = solicitacoes.map((s: typeof solicitacoes[number]) => ({
+    const formattedRequests: FormattedRequest[] = requests.map((s: typeof requests[number]) => ({
       id: s.id_ordem,
       solicitante: {
         nome: s.usuarios?.nome ?? null,
         telefone: s.usuarios?.telefone ?? null,
         cpf: s.usuarios?.cpf ?? null,
       },
-      endereco: s.endereco,
-      referencia: s.referencia,
-      problema: s.descricao.slice(0, 200) + (s.descricao.length > 200 ? "..." : ""),
-      status: this.formatarStatus(s.status),
-      dataSolicitacao: s.data_criacao ? s.data_criacao.toLocaleDateString("pt-BR") : null,
-      dataConclusao: s.data_conclusao?.toLocaleDateString("pt-BR") ?? null,
+      adress: s.endereco, 
+      landmark: s.referencia,
+      problem: s.descricao.slice(0, 200) + (s.descricao.length > 200 ? "..." : ""),
+      status: this.formatStatus(s.status),
+      dateRequest: s.data_criacao ? s.data_criacao.toLocaleDateString("pt-BR") : null,
+      dateRequestConcluded: s.data_conclusao?.toLocaleDateString("pt-BR") ?? null,
     }));
 
-    return solicitacoesFormatadas;
+    return formattedRequests;
   }
 
-  private static formatarStatus(status: string): string {
+  private static formatStatus(status: string): string {
     const statusMap: Record<string, string> = {
       FINALIZADA: "Finalizada",
       EM_EXECUCAO: "Em execução",

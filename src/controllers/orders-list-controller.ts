@@ -2,16 +2,13 @@ import { prisma } from "../server";
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { ordersqueryschema } from "../validators/orders-query";
 
-
-
-
-export const SolicitarOrdersInfo = async(
+export const requestOrdersInfo = async(
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
 
   const info = ordersqueryschema.parse(request.query);
-  const ordens_e_servicos_bd = await prisma.registro_ordens.findMany({
+  const ordersAndServices = await prisma.registro_ordens.findMany({
     orderBy: {
       data_criacao: 'desc'
     }
@@ -19,20 +16,20 @@ export const SolicitarOrdersInfo = async(
 
   if (info.mensagem == "recente") {
 
-    reply.send(ordens_e_servicos_bd);
+    reply.send(ordersAndServices);
   }
   else if (info.mensagem == 'pendente') {
-    reply.send(ordens_e_servicos_bd.filter((ordem: typeof ordens_e_servicos_bd[number]) => ordem.status === "PENDENTE"))
+    reply.send(ordersAndServices.filter((ordem: typeof ordersAndServices[number]) => ordem.status === "PENDENTE"))
   }
   else if (info.mensagem == 'concluido') {
-    reply.send(ordens_e_servicos_bd.filter((ordem:typeof ordens_e_servicos_bd[number]) => ordem.status === "CONCLUIDO"))
+    reply.send(ordersAndServices.filter((ordem:typeof ordersAndServices[number]) => ordem.status === "CONCLUIDO"))
   }
   else if (!isNaN(Number(info.mensagem))) {
-    reply.send(ordens_e_servicos_bd.filter((ordem: typeof ordens_e_servicos_bd[number]) => ordem.id_ordem === Number(info.mensagem)))
+    reply.send(ordersAndServices.filter((ordem: typeof ordersAndServices[number]) => ordem.id_ordem === Number(info.mensagem)))
   }
 }
 
-export const CancelarOrdem = async (request: FastifyRequest, reply: FastifyReply) => {
+export const cancelOrder = async (request: FastifyRequest, reply: FastifyReply) => {
     const body = request.body as { id_ordem?: number; justificativa?: string };
 
     if (!body.id_ordem) {
@@ -44,16 +41,16 @@ export const CancelarOrdem = async (request: FastifyRequest, reply: FastifyReply
       return;
     }
 
-    const ordem = await prisma.registro_ordens.findUnique({
+    const order = await prisma.registro_ordens.findUnique({
       where: { id_ordem: Number(body.id_ordem) }
     });
 
-    if (!ordem) {
+    if (!order) {
       reply.status(404).send('Ordem não encontrada');
       return;
     }
 
-    const ordem_cancelada = await prisma.registro_ordens.update({
+    const canceledOrder = await prisma.registro_ordens.update({
       where: { id_ordem: Number(body.id_ordem) },
       data: {
         status: "CANCELADO",
@@ -61,7 +58,7 @@ export const CancelarOrdem = async (request: FastifyRequest, reply: FastifyReply
       }
     });
 
-    reply.send(`ordem "${ordem_cancelada.id_ordem}" de descrição "${ordem_cancelada.descricao}" foi cancelada. -${ordem_cancelada.Justificativa}`);
+    reply.send(`ordem "${canceledOrder.id_ordem}" de descrição "${canceledOrder.descricao}" foi cancelada. -${canceledOrder.Justificativa}`);
 };
 
 export const changeStatusOrder = async (

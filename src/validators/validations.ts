@@ -13,22 +13,11 @@ const validationsMessages = {
     Required: "Descrição é obrigatória",
     Min: "Descreva o ocorrido com pelo menos 10 caracteres",
     Max: "Descrição muito longa (máximo 1000 caracteres)"
-  },
-  Imagem: {
-    InvalidUrl: "URL da imagem inválida",
-    InvalidType: "A URL deve ser de uma imagem (jpg, jpeg, png, gif)"
-  },
+  }
 }
 
-const imagemUrlSchema = z.string()
-    .url(validationsMessages.Imagem.InvalidUrl)
-    .refine((url) => {
-      const imageExtensions = [".jpg", ".jpeg", ".png", ".gif"]
-      return imageExtensions.some(ext => url.toLowerCase().includes(ext))
-    }, validationsMessages.Imagem.InvalidType)
-    .optional()
 
-export const CriarSolicitacaoSchema = z.object({
+export const CreateRequestSchema = z.object({
   endereco: z.string()
     .min(1,validationsMessages.Endereco.Required)
     .min(5, validationsMessages.Endereco.Min)
@@ -41,8 +30,6 @@ export const CriarSolicitacaoSchema = z.object({
     .min(1, validationsMessages.Descricao.Required)
     .min(10,validationsMessages.Descricao.Min)
     .max(1000, validationsMessages.Descricao.Max),
-  
-    imagemUrl: imagemUrlSchema,
 });
 
 export const idSchema = z.object({

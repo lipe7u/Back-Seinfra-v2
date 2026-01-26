@@ -10,8 +10,8 @@ export const login = async (
     const token = await loginUserService(reply.server, request.body);
     reply.send({ token });
   } catch (error) {
-    const MensagemDeError =
+    const errorMessage =
       error instanceof Error ? error.message : "Erro de login de usuário";
-    reply.code(401).send({ error: MensagemDeError });
+    reply.code(401).send({ error: errorMessage });
   }
 };

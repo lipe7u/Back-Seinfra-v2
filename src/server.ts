@@ -28,16 +28,16 @@ app.addHook("preHandler", async (request, reply) => {
   console.log("url:", request.url);
   console.log("================================");
 
-  const rota = request.url.split("?")[0];
+  const route = request.url.split("?")[0];
 
-  const rotasPublicas = [
+  const publicRoutes = [
     "/registro",
     "/login",
     "/registro-admin",
     "/login-admin",
   ];
 
-  if (rotasPublicas.includes(rota)) {
+  if (publicRoutes.includes(route)) {
     return;
   }
 

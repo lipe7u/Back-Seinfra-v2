@@ -1,21 +1,20 @@
-export interface SolicitacaoInput {
-  endereco: string;
-  pontoReferencia?: string;
-  descricao: string;
-  imagemUrl?: string;
+export interface RequestInput {
+  address: string;
+  landmark?: string;
+  description: string;
 }
 
-export interface CriarSolicitacaoData {
-  body: SolicitacaoInput;
+export interface CreateRequestDate {
+  body: RequestInput;
   userId: number;
 }
 
-export interface SolicitacaoFormatada {
+export interface FormattedRequest {
   id: number;
-  endereco: string;
-  referencia: string | null;
-  problema: string;
+  adress: string;
+  landmark: string | null;
+  problem: string;
   status: string;
-  dataSolicitacao: string | null;
-  dataConclusao: string | null;
+  dateRequest: string | null;
+  dateRequestConcluded: string | null;
 }

@@ -7,7 +7,7 @@ export const loginUserService = async (app: FastifyInstance, data: LoginB) => {
   try {
     const user = data.cpf
       ? await prisma.usuarios.findUnique({ where: { cpf: data.cpf } })
-      : await prisma.usuarios.findFirst({ where: { telefone: data.telefone } });
+      : await prisma.usuarios.findFirst({ where: { telefone: data.phone } });
 
     if (!user) {
       throw new Error("Usuário não encontrado");
@@ -17,7 +17,7 @@ export const loginUserService = async (app: FastifyInstance, data: LoginB) => {
       throw new Error("Senha não encontrada");
     }
 
-    const isPasswordValid = await bcrypt.compare(data.senha, user.senha_hash);
+    const isPasswordValid = await bcrypt.compare(data.password, user.senha_hash);
     if (!isPasswordValid) {
       throw new Error("Erro no credenciamento");
     }
@@ -37,8 +37,8 @@ export const loginAdminService = async (app: FastifyInstance, data: LoginAdminB)
   if (!admin || !admin.Admin) {
     throw new Error("Admin não encontrado");
   }
-  const senhaValida = await bcrypt.compare(data.senha, admin.senha_hash || "");
-  if (!senhaValida) {
+  const validPassword = await bcrypt.compare(data.password, admin.senha_hash || "");
+  if (!validPassword) {
     throw new Error("Senha incorreta");
   }
   const token = app.jwt.sign({id: admin.id_user, Admin: admin.Admin})

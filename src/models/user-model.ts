@@ -5,7 +5,7 @@ const registroUsuario = async (data: RegisterB) => {
     throw new Error("Cpf já cadastrado!");
   }
 
-  if (!data.telefone) {
+  if (!data.phone) {
     throw new Error("Telefone já cadastrado!");
   }
 };

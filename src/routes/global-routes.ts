@@ -3,25 +3,23 @@ import { registerAdmin } from "../controllers/register-adm-controller";
 import { register } from "../controllers/register-controller";
 import { login } from "../controllers/login-controller";
 import {
-  CriarSolicitacao,
-  ListarSolicitacoes,
+  CreateRequests,
+  ListRequests,
 } from "../controllers/solicitacoes-controller";
 import { generateRequestsPdf } from "../controllers/pdfController";
-import { CancelarOrdem, changeStatusOrder } from "../controllers/orders-list-controller";
-import { SolicitarOrdersInfo } from "../controllers/orders-list-controller";
+import { cancelOrder, changeStatusOrder } from "../controllers/orders-list-controller";
+import { requestOrdersInfo } from "../controllers/orders-list-controller";
 import { loginAdmin } from "../controllers/login-admin-controller";
 
 export default async function GlobalRoutes(app: FastifyInstance) {
   app.post("/registro", register);
   app.post("/login", login);
   app.post("/registro-admin", registerAdmin);
-  app.post("/novaSolicitacao", CriarSolicitacao);
-  app.get("/minhas-solicitacoes", ListarSolicitacoes);
+  app.post("/novaSolicitacao", CreateRequests);
+  app.get("/minhas-solicitacoes", ListRequests);
   app.get("/gerarPdfSolicitacoes", generateRequestsPdf);
-  app.get("/solicitarOrdens", SolicitarOrdersInfo);
-  app.post("/cancelarOrdem", CancelarOrdem);
+  app.get("/solicitarOrdens", requestOrdersInfo);
+  app.post("/cancelarOrdem", cancelOrder);
   app.post("/changeOrderStatus", changeStatusOrder)
-  app.post("/login-admin", loginAdmin)
-  console.log("Rotas de autenticação e solicitação registradas!");
-  
+  app.post("/login-admin", loginAdmin);
 }
