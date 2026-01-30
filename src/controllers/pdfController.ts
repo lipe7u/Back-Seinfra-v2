@@ -7,12 +7,30 @@ export const generateRequestsPdf = async (
   reply: FastifyReply
 ) => {
   try {
-    const { id: id_user } = request.user as { id: number; Admin: boolean };
+    const { startDate, endDate } = request.query as {
+      startDate: string;
+      endDate: string;
+    };
+
+    if (!startDate || !endDate) {
+      return reply.status(400).send({
+        error: "dataInicio e dataFim são obrigatórios.",
+      });
+    }
+
+    const start = new Date(`${startDate}T00:00:00`);
+    const end = new Date(`${endDate}T23:59:59.999`);
 
     const requests = await prisma.registro_ordens.findMany({
       where: {
-        id_solicitante: id_user,
-        status: "FINALIZADA",
+        status: "CONCLUIDO",
+        data_criacao: {
+          gte: start,
+          lte: end,
+        },
+      },
+      orderBy: {
+        data_criacao: "asc",
       },
       select: {
         id_ordem: true,
@@ -22,198 +40,115 @@ export const generateRequestsPdf = async (
         status: true,
         data_criacao: true,
         data_conclusao: true,
-      },
-      orderBy: {
-        data_criacao: "desc",
+        usuarios: {
+          select: {
+            nome: true,
+            cpf: true,
+            telefone: true,
+          },
+        },
       },
     });
 
     if (requests.length === 0) {
-      return reply
-        .status(404)
-        .send({ error: "Nenhuma solicitação finalizada encontrada." });
+      return reply.status(404).send({
+        error: "Nenhuma solicitação encontrada no período informado.",
+      });
     }
 
-    const user = await prisma.usuarios.findUnique({
-      where: {
-        id_user: id_user,
-      },
-      select: {
-        nome: true,
-        cpf: true,
-        telefone: true,
-      },
-    });
+    // ================= PDF =================
+    const pdfDoc = await PDFDocument.create();
+    const font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+    const blackColor = rgb(0, 0, 0);
 
-    if (!user) {
-      return reply.status(404).send({ error: "Usuário não encontrado." });
-    }
+    let page = pdfDoc.addPage();
+    let { height } = page.getSize();
+    let y = height - 50;
 
-    for (const request of requests) {
-      const pdfDoc = await PDFDocument.create();
-      const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-      const page = pdfDoc.addPage();
-      const { width, height } = page.getSize();
-      let next_pos = 50;
+    const bottomMargin = 50;
 
-      function drawText(
-        texto: string,
-        fontSize: number,
-        color: any,
-        font: any,
-        x: number,
-        y: number
-      ) {
-        page.drawText(texto, {
-          x,
-          y,
-          size: fontSize,
-          font,
-          color,
-        });
+    const drawText = (text: string, size = 12) => {
+      if (y < bottomMargin) {
+        page = pdfDoc.addPage();
+        ({ height } = page.getSize());
+        y = height - 50;
       }
 
-      const blackColor = rgb(0, 0, 0);
+      page.drawText(text, {
+        x: 30,
+        y,
+        size,
+        font,
+        color: blackColor,
+      });
+
+      y -= size + 6;
+    };
+
+    drawText("RELATÓRIO DE ORDENS DE SERVIÇO CONCLUÍDAS", 16);
+    y -= 4;
+    drawText(
+      `Período: ${new Date(startDate).toLocaleDateString("pt-BR")} a ${new Date(
+        endDate
+      ).toLocaleDateString("pt-BR")}`,
+      12
+    );
+
+    y -= 20;
+
+    for (const request of requests) {
+      drawText("--------------------------------------------------");
+
+      drawText(`OS Nº: ${request.id_ordem}`, 13);
+      y -= 4;
 
       drawText(
-        "Relatório de Solicitação Finalizada",
-        20,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
+        `Solicitante: ${request.usuarios?.nome ?? "Não informado"}`
       );
-      next_pos += 30;
+      drawText(`CPF: ${request.usuarios?.cpf ?? "Não informado"}`);
+      drawText(
+        `Telefone: ${request.usuarios?.telefone ?? "Não informado"}`
+      );
+
+      y -= 6;
+
+      drawText(`Endereço: ${request.endereco}`);
+      drawText(`Referência: ${request.referencia ?? "Não informado"}`);
+      drawText(`Descrição: ${request.descricao}`);
+      drawText(`Status: ${request.status}`);
 
       drawText(
-        "Informações do Usuário:",
-        15,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
+        `Data de Criação: ${
+          request.data_criacao
+            ? request.data_criacao.toLocaleDateString("pt-BR")
+            : "-"
+        }`
       );
-      next_pos += 20;
-      drawText(
-        `Nome: ${user.nome}`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 15;
-      drawText(
-        `CPF: ${user.cpf}`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 15;
-      drawText(
-        `Telefone: ${user.telefone}`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 30;
 
-      drawText(
-        "Informações sobre a Ordem de Serviço:",
-        15,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 20;
-      drawText(
-        `ID da Ordem: ${request.id_ordem}`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 15;
-      drawText(
-        `Endereço: ${request.endereco}`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 15;
-      drawText(
-        `Ponto de Referência: ${request.referencia || "Não informado"}`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 15;
-      drawText(
-        `Descrição: ${request.descricao}`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 15;
-      drawText(
-        `Status: ${request.status}`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 15;
-      drawText(
-        `Data de Criação: ${request.data_criacao?.toLocaleDateString(
-          "pt-BR"
-        )}`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
-      );
-      next_pos += 15;
       drawText(
         `Data de Conclusão: ${
           request.data_conclusao
             ? request.data_conclusao.toLocaleDateString("pt-BR")
-            : "Não concluída"
-        }`,
-        12,
-        blackColor,
-        timesRomanFont,
-        30,
-        height - next_pos
+            : "Não informada"
+        }`
       );
-      next_pos += 30;
 
-      const pdfBytes = await pdfDoc.save();
-
-      const fileName = `solicitacao_${request.id_ordem}.pdf`;
-
-      reply.header("Content-Type", "application/pdf");
-      reply.header(
-        "Content-Disposition",
-        `attachment; filename=${fileName}`
-      );
-      reply.send(pdfBytes);
+      y -= 12;
     }
+
+    drawText("--------------------------------------------------");
+
+    const pdfBytes = await pdfDoc.save();
+
+    reply.header("Content-Type", "application/pdf");
+    reply.header(
+      "Content-Disposition",
+      "attachment; filename=relatorio_os_finalizadas.pdf"
+    );
+
+    return reply.send(pdfBytes);
   } catch (error) {
     console.error("Erro ao gerar PDF:", error);
-    reply.status(500).send({ error: "Erro ao gerar PDF" });
+    return reply.status(500).send({ error: "Erro ao gerar PDF" });
   }
 };
