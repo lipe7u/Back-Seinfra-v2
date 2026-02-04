@@ -10,7 +10,7 @@ export const registerUserService = async (data: RegisterB) => {
       throw new Error("Cpf inválido")
     }
 
-    const existingCpf = await prisma.usuarios.findUnique({
+    const existingCpf = await prisma.users.findUnique({
       where: { cpf: cleanCpf }
     })
 
@@ -20,12 +20,12 @@ export const registerUserService = async (data: RegisterB) => {
 
     const passwordHashed = await bcrypt.hash(data.password, 10);
     
-    const user = await prisma.usuarios.create({
+    const user = await prisma.users.create({
       data: {
         cpf: data.cpf,
-        nome: data.name,
-        telefone: data.phone,
-        senha_hash: passwordHashed,
+        name: data.name,
+        phone: data.phone,
+        password_hash: passwordHashed,
       },
     });
     return user;
@@ -42,7 +42,7 @@ export const registerAdminService = async (data: RegisterAdminB) => {
       throw new Error("Cpf inválido")
     }
 
-    const existingCpf = await prisma.usuarios.findUnique({
+    const existingCpf = await prisma.users.findUnique({
       where: { cpf: cleanCpf }
     })
 
@@ -52,11 +52,11 @@ export const registerAdminService = async (data: RegisterAdminB) => {
     
     const passwordHashed = await bcrypt.hash(data.password, 10);
     
-    const admin = await prisma.usuarios.create({
+    const admin = await prisma.users.create({
       data: {
         cpf: data.cpf,
-        senha_hash: passwordHashed,
-        telefone: data.phone,
+        password_hash: passwordHashed,
+        phone: data.phone,
         Admin: true,
       },
     });

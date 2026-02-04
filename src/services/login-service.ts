@@ -6,18 +6,18 @@ import { prisma } from "../server";
 export const loginUserService = async (app: FastifyInstance, data: LoginB) => {
   try {
     const user = data.cpf
-      ? await prisma.usuarios.findUnique({ where: { cpf: data.cpf } })
-      : await prisma.usuarios.findFirst({ where: { telefone: data.phone } });
+      ? await prisma.users.findUnique({ where: { cpf: data.cpf } })
+      : await prisma.users.findFirst({ where: { phone: data.phone } });
 
     if (!user) {
       throw new Error("Usuário não encontrado");
     }
 
-    if (!user.senha_hash) {
+    if (!user.password_hash) {
       throw new Error("Senha não encontrada");
     }
 
-    const isPasswordValid = await bcrypt.compare(data.password, user.senha_hash);
+    const isPasswordValid = await bcrypt.compare(data.password, user.password_hash);
     if (!isPasswordValid) {
       throw new Error("Erro no credenciamento");
     }
@@ -31,13 +31,13 @@ export const loginUserService = async (app: FastifyInstance, data: LoginB) => {
 };
 
 export const loginAdminService = async (app: FastifyInstance, data: LoginAdminB) => {
-  const admin = await prisma.usuarios.findUnique({
+  const admin = await prisma.users.findUnique({
     where: { cpf: data.cpf },
   });
   if (!admin || !admin.Admin) {
     throw new Error("Admin não encontrado");
   }
-  const validPassword = await bcrypt.compare(data.password, admin.senha_hash || "");
+  const validPassword = await bcrypt.compare(data.password, admin.password_hash || "");
   if (!validPassword) {
     throw new Error("Senha incorreta");
   }

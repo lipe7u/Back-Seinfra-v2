@@ -21,30 +21,30 @@ export const generateRequestsPdf = async (
     const start = new Date(`${startDate}T00:00:00`);
     const end = new Date(`${endDate}T23:59:59.999`);
 
-    const requests = await prisma.registro_ordens.findMany({
+    const requests = await prisma.record_orders.findMany({
       where: {
         status: "CONCLUIDO",
-        data_criacao: {
+        creation_date: {
           gte: start,
           lte: end,
         },
       },
       orderBy: {
-        data_criacao: "asc",
+        creation_date: "asc",
       },
       select: {
-        id_ordem: true,
-        endereco: true,
-        referencia: true,
-        descricao: true,
+        id_order: true,
+        address: true,
+        reference: true,
+        description: true,
         status: true,
-        data_criacao: true,
-        data_conclusao: true,
-        usuarios: {
+        creation_date: true,
+        concluded_date: true,
+        users: {
           select: {
-            nome: true,
+            name: true,
             cpf: true,
-            telefone: true,
+            phone: true,
           },
         },
       },
@@ -99,36 +99,36 @@ export const generateRequestsPdf = async (
     for (const request of requests) {
       drawText("--------------------------------------------------");
 
-      drawText(`OS Nº: ${request.id_ordem}`, 13);
+      drawText(`OS Nº: ${request.id_order}`, 13);
       y -= 4;
 
       drawText(
-        `Solicitante: ${request.usuarios?.nome ?? "Não informado"}`
+        `Solicitante: ${request.users?.name ?? "Não informado"}`
       );
-      drawText(`CPF: ${request.usuarios?.cpf ?? "Não informado"}`);
+      drawText(`CPF: ${request.users?.cpf ?? "Não informado"}`);
       drawText(
-        `Telefone: ${request.usuarios?.telefone ?? "Não informado"}`
+        `Telefone: ${request.users?.phone ?? "Não informado"}`
       );
 
       y -= 6;
 
-      drawText(`Endereço: ${request.endereco}`);
-      drawText(`Referência: ${request.referencia ?? "Não informado"}`);
-      drawText(`Descrição: ${request.descricao}`);
+      drawText(`Endereço: ${request.address}`);
+      drawText(`Referência: ${request.reference ?? "Não informado"}`);
+      drawText(`Descrição: ${request.description}`);
       drawText(`Status: ${request.status}`);
 
       drawText(
         `Data de Criação: ${
-          request.data_criacao
-            ? request.data_criacao.toLocaleDateString("pt-BR")
+          request.creation_date
+            ? request.creation_date.toLocaleDateString("pt-BR")
             : "-"
         }`
       );
 
       drawText(
         `Data de Conclusão: ${
-          request.data_conclusao
-            ? request.data_conclusao.toLocaleDateString("pt-BR")
+          request.concluded_date
+            ? request.concluded_date.toLocaleDateString("pt-BR")
             : "Não informada"
         }`
       );
