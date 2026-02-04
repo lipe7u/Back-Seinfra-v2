@@ -1,4 +1,4 @@
-export function cpfValidate(cpf: string): boolean {
+export function cpfValidation(cpf: string): boolean {
     const cleanCpf = cpf.replace(/\D/g, '')
 
     if (cleanCpf.length !== 11) return false

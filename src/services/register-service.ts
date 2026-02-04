@@ -1,12 +1,12 @@
 import * as bcrypt from "bcryptjs";
 import { RegisterAdminB, RegisterB } from "../interface/auth-interfaces";
 import { prisma } from "../server";
-import { cpfValidate } from "../utils/cpf-validation";
+import { cpfValidation } from "../utils/cpf-validation";
 
 export const registerUserService = async (data: RegisterB) => {
   try {
     const cleanCpf = data.cpf.replace(/\D/g, '')
-    if (!cpfValidate(cleanCpf)) { 
+    if (!cpfValidation(cleanCpf)) { 
       throw new Error("Cpf inválido")
     }
 
@@ -38,7 +38,7 @@ export const registerUserService = async (data: RegisterB) => {
 export const registerAdminService = async (data: RegisterAdminB) => {
   try {
     const cleanCpf = data.cpf.replace(/\D/g, '')
-    if (!cpfValidate(cleanCpf)) { 
+    if (!cpfValidation(cleanCpf)) { 
       throw new Error("Cpf inválido")
     }
 
