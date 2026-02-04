@@ -7,66 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model atribuicoes {
-  id_atribuicoes       Int                   @id @default(autoincrement())
-  ordem                Int?
-  id_resp              Int?
-  data_atribuicao      DateTime?             @default(now()) @db.Timestamp(6)
-  cadastro_colaborador cadastro_colaborador? @relation(fields: [id_resp], references: [id_colab], onDelete: NoAction, onUpdate: NoAction)
-  registro_ordens      registro_ordens?      @relation(fields: [ordem], references: [id_ordem], onDelete: NoAction, onUpdate: NoAction)
-}
-
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model cadastro_colaborador {
-  id_colab    Int           @id @default(autoincrement())
-  nome_colab  String?       @db.VarChar(200)
-  telefone    String        @db.VarChar(20)
-  senha_colab String?       @db.VarChar(60)
-  cargo       String
-  setor_id    Int?
-  atribuicoes atribuicoes[]
-  setores     setores?      @relation(fields: [setor_id], references: [id_setor], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model imagens_ordens {
-  id_imagem       Int              @id @default(autoincrement())
-  id_os           Int?
-  caminho_arquivo String           @db.VarChar(255)
-  registro_ordens registro_ordens? @relation(fields: [id_os], references: [id_ordem], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model registro_ordens {
-  id_ordem       Int              @id @default(autoincrement())
-  id_solicitante Int?
-  setor_resp     Int
-  endereco       String
-  referencia     String?
-  descricao      String
+model record_orders {
+  id_order       Int              @id @default(autoincrement())
+  id_applicant Int?
+  sector_resp     Int
+  address       String
+  reference     String?
+  description     String
   status         String
-  data_criacao   DateTime?        @default(now()) @db.Timestamp(6)
-  data_conclusao DateTime?        @default(now()) @db.Timestamp(6)
-  Justificativa  String?
-  atribuicoes    atribuicoes[]
-  imagens_ordens imagens_ordens[]
-  usuarios       usuarios?        @relation(fields: [id_solicitante], references: [id_user], onDelete: NoAction, onUpdate: NoAction)
-  setores        setores          @relation(fields: [setor_resp], references: [id_setor], onDelete: NoAction, onUpdate: NoAction)
+  creation_date   DateTime?        @default(now()) @db.Timestamp(6)
+  concluded_date DateTime?        @default(now()) @db.Timestamp(6)
+  justification  String?
+  users       users?        @relation(fields: [id_applicant], references: [id_user], onDelete: NoAction, onUpdate: NoAction)
+  sectors        sectors          @relation(fields: [sector_resp], references: [id_sector], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model setores {
-  id_setor             Int                    @id @default(autoincrement())
-  nome_setor           String
-  cadastro_colaborador cadastro_colaborador[]
-  registro_ordens      registro_ordens[]
+model sectors {
+  id_sector             Int                    @id @default(autoincrement())
+  name_setor           String
+  record_orders      record_orders[]
 }
 
-model usuarios {
+model users {
   id_user         Int               @id @default(autoincrement())
-  nome            String?           @db.VarChar(200)
-  telefone        String            @db.VarChar(20)
-  cpf             String            @unique @db.Char(14)
-  senha_hash      String?           @db.VarChar(60)
+  name            String?           @db.VarChar(200)
+  phone        String            @db.VarChar(20)
+  cpf             String            @unique @db.Char(11)
+  password_hash      String?           @db.VarChar(60)
   Admin           Boolean           @default(false)
-  registro_ordens registro_ordens[]
+  record_orders  record_orders[]
 }
