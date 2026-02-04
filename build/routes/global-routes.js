@@ -13,11 +13,11 @@ async function GlobalRoutes(app) {
     app.post("/registro", register_controller_1.register);
     app.post("/login", login_controller_1.login);
     app.post("/registro-admin", register_adm_controller_1.registerAdmin);
-    app.post("/novaSolicitacao", solicitacoes_controller_1.CriarSolicitacao);
-    app.get("/minhas-solicitacoes", solicitacoes_controller_1.ListarSolicitacoes);
+    app.post("/novaSolicitacao", solicitacoes_controller_1.CreateRequests);
+    app.get("/minhas-solicitacoes", solicitacoes_controller_1.ListRequests);
     app.get("/gerarPdfSolicitacoes", pdfController_1.generateRequestsPdf);
-    app.get("/solicitarOrdens", orders_list_controller_2.SolicitarOrdersInfo);
-    app.post("/cancelarOrdem", orders_list_controller_1.CancelarOrdem);
+    app.get("/solicitarOrdens", orders_list_controller_2.requestOrdersInfo);
+    app.post("/cancelarOrdem", orders_list_controller_1.cancelOrder);
+    app.post("/changeOrderStatus", orders_list_controller_1.changeStatusOrder);
     app.post("/login-admin", login_admin_controller_1.loginAdmin);
-    console.log("Rotas de autenticação e solicitação registradas!");
 }

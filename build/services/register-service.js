@@ -36,15 +36,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerAdminService = exports.registerUserService = void 0;
 const bcrypt = __importStar(require("bcryptjs"));
 const server_1 = require("../server");
+const cpf_validation_1 = require("../utils/cpf-validation");
 const registerUserService = async (data) => {
     try {
-        const senhaHashed = await bcrypt.hash(data.senha, 10);
+        const cleanCpf = data.cpf.replace(/\D/g, '');
+        if (!(0, cpf_validation_1.cpfValidation)(cleanCpf)) {
+            throw new Error("Cpf inválido");
+        }
+        const existingCpf = await server_1.prisma.usuarios.findUnique({
+            where: { cpf: cleanCpf }
+        });
+        if (existingCpf) {
+            throw new Error("CPF já cadastrado");
+        }
+        const passwordHashed = await bcrypt.hash(data.password, 10);
         const user = await server_1.prisma.usuarios.create({
             data: {
                 cpf: data.cpf,
-                nome: data.nome,
-                telefone: data.telefone,
-                senha_hash: senhaHashed,
+                nome: data.name,
+                telefone: data.phone,
+                senha_hash: passwordHashed,
             },
         });
         return user;
@@ -57,12 +68,22 @@ const registerUserService = async (data) => {
 exports.registerUserService = registerUserService;
 const registerAdminService = async (data) => {
     try {
-        const senhaHashed = await bcrypt.hash(data.senha, 10);
+        const cleanCpf = data.cpf.replace(/\D/g, '');
+        if (!(0, cpf_validation_1.cpfValidation)(cleanCpf)) {
+            throw new Error("Cpf inválido");
+        }
+        const existingCpf = await server_1.prisma.usuarios.findUnique({
+            where: { cpf: cleanCpf }
+        });
+        if (existingCpf) {
+            throw new Error("CPF já cadastrado");
+        }
+        const passwordHashed = await bcrypt.hash(data.password, 10);
         const admin = await server_1.prisma.usuarios.create({
             data: {
                 cpf: data.cpf,
-                senha_hash: senhaHashed,
-                telefone: data.telefone,
+                senha_hash: passwordHashed,
+                telefone: data.phone,
                 Admin: true,
             },
         });

@@ -8,7 +8,13 @@ export const login = async (
 ) => {
   try {
     const token = await loginUserService(reply.server, request.body);
-    reply.send({ token });
+    reply.setCookie("token", token , {
+      httpOnly: true,
+      secure: true,
+      maxAge: 24 * 60 * 60,
+      sameSite: "lax",
+      path: "/"
+    }).send({ success: true });
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Erro de login de usuário";
