@@ -7,67 +7,66 @@ export class RequestsService {
   static async CreateRequest({ body, userId }: CreateRequestDate) {
     const setorResponsavel = 2;
 
-    const request = await prisma.registro_ordens.create({
+    const request = await prisma.record_orders.create({
       data: {
-        id_solicitante: userId,
-        setor_resp: setorResponsavel,
-        endereco: body.address,
-        referencia: body.landmark,
-        descricao: body.description,
+        id_applicant: userId,
+        sector_resp: setorResponsavel,
+        address: body.address,
+        reference: body.landmark,
+        description: body.description,
         status: "PENDENTE",
-        data_criacao: new Date(),
+        creation_date: new Date(),
       },
     });
     
     return {
-      id: request.id_ordem,
+      id: request.id_order,
       mensagem: "Solicitação criada com sucesso",
       request,
     };
   }
 
   static async ListRequests(userId: number): Promise<FormattedRequest[]> {
-    const requests = await prisma.registro_ordens.findMany({
+    const requests = await prisma.record_orders.findMany({
       where: {
-        id_solicitante: userId,
+        id_applicant: userId,
         
       },
       select: {
-        id_ordem: true,
-        endereco: true,
-        referencia: true,
-        descricao: true,
-        imagens_ordens: true,
+        id_order: true,
+        address: true,
+        reference: true,
+        description: true,
         status: true,
-        data_criacao: true,
-        data_conclusao: true,
+        creation_date: true,
+        concluded_date: true,
 
-        usuarios: {
+        users: {
           select : {
-            nome: true,
-            telefone: true,
+            name: true,
+            phone: true,
             cpf: true, 
           }
         }
       },
       orderBy: {
-        data_criacao: "desc",
+        creation_date: "desc",
       },
     });
 
     const formattedRequests: FormattedRequest[] = requests.map((s: typeof requests[number]) => ({
-      id: s.id_ordem,
+      id: s.id_order,
       solicitante: {
-        nome: s.usuarios?.nome ?? null,
-        telefone: s.usuarios?.telefone ?? null,
-        cpf: s.usuarios?.cpf ?? null,
+        name: s.users?.name ?? null,
+        phone: s.users?.phone ?? null,
+        cpf: s.users?.cpf ?? null,
       },
-      adress: s.endereco, 
-      landmark: s.referencia,
-      problem: s.descricao.slice(0, 200) + (s.descricao.length > 200 ? "..." : ""),
+      adress: s.address, 
+      landmark: s.reference,
+      problem: s.description.slice(0, 200) + (s.description.length > 200 ? "..." : ""),
       status: this.formatStatus(s.status),
-      dateRequest: s.data_criacao ? s.data_criacao.toLocaleDateString("pt-BR") : null,
-      dateRequestConcluded: s.data_conclusao?.toLocaleDateString("pt-BR") ?? null,
+      dateRequest: s.creation_date ? s.creation_date.toLocaleDateString("pt-BR") : null,
+      dateRequestConcluded: s.concluded_date?.toLocaleDateString("pt-BR") ?? null,
     }));
 
     return formattedRequests;
