@@ -40,14 +40,14 @@ const loginUserService = async (app, data) => {
     try {
         const user = data.cpf
             ? await server_1.prisma.usuarios.findUnique({ where: { cpf: data.cpf } })
-            : await server_1.prisma.usuarios.findFirst({ where: { telefone: data.telefone } });
+            : await server_1.prisma.usuarios.findFirst({ where: { telefone: data.phone } });
         if (!user) {
             throw new Error("Usuário não encontrado");
         }
         if (!user.senha_hash) {
             throw new Error("Senha não encontrada");
         }
-        const isPasswordValid = await bcrypt.compare(data.senha, user.senha_hash);
+        const isPasswordValid = await bcrypt.compare(data.password, user.senha_hash);
         if (!isPasswordValid) {
             throw new Error("Erro no credenciamento");
         }
@@ -67,8 +67,8 @@ const loginAdminService = async (app, data) => {
     if (!admin || !admin.Admin) {
         throw new Error("Admin não encontrado");
     }
-    const senhaValida = await bcrypt.compare(data.senha, admin.senha_hash || "");
-    if (!senhaValida) {
+    const validPassword = await bcrypt.compare(data.password, admin.senha_hash || "");
+    if (!validPassword) {
         throw new Error("Senha incorreta");
     }
     const token = app.jwt.sign({ id: admin.id_user, Admin: admin.Admin });

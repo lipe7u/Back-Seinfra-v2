@@ -5,11 +5,17 @@ const login_service_1 = require("../services/login-service");
 const login = async (request, reply) => {
     try {
         const token = await (0, login_service_1.loginUserService)(reply.server, request.body);
-        reply.send({ token });
+        reply.setCookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            maxAge: 24 * 60 * 60,
+            sameSite: "lax",
+            path: "/"
+        }).send({ success: true });
     }
     catch (error) {
-        const MensagemDeError = error instanceof Error ? error.message : "Erro de login de usuário";
-        reply.code(401).send({ error: MensagemDeError });
+        const errorMessage = error instanceof Error ? error.message : "Erro de login de usuário";
+        reply.code(401).send({ error: errorMessage });
     }
 };
 exports.login = login;

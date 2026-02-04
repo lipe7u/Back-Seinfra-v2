@@ -4,7 +4,7 @@ const registroUsuario = async (data) => {
     if (!data.cpf) {
         throw new Error("Cpf já cadastrado!");
     }
-    if (!data.telefone) {
+    if (!data.phone) {
         throw new Error("Telefone já cadastrado!");
     }
 };
