@@ -8,13 +8,7 @@ export const loginAdmin = async (
 ) => {
   try {
     const token = await loginAdminService(reply.server, request.body);
-    reply.setCookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      maxAge: 24 * 60 * 60,
-      sameSite: "lax",
-      path: "/"
-    }).send({ success: true })
+    reply.code(200).send({token});
   } catch (error) {
     const message = error instanceof Error ? error.message : "Erro no login";
     reply.code(401).send({ error: message });
