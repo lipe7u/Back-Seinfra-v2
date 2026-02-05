@@ -22,7 +22,7 @@ exports.CreateRequestSchema = zod_1.z.object({
         .min(1, validationsMessages.Endereco.Required)
         .min(5, validationsMessages.Endereco.Min)
         .max(300, validationsMessages.Endereco.Max),
-    landmark: zod_1.z.string()
+    reference: zod_1.z.string()
         .optional(),
     description: zod_1.z.string()
         .min(1, validationsMessages.Descricao.Required)
