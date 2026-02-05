@@ -1,6 +1,6 @@
 export interface RequestInput {
   address: string;
-  landmark?: string;
+  reference?: string;
   description: string;
 }
 
@@ -12,7 +12,7 @@ export interface CreateRequestDate {
 export interface FormattedRequest {
   id: number;
   adress: string;
-  landmark: string | null;
+  reference: string | null;
   problem: string;
   status: string;
   dateRequest: string | null;
