@@ -19,7 +19,7 @@ class RequestsService {
         });
         return {
             id: request.id_order,
-            mensagem: "Solicitação criada com sucesso",
+            message: "Solicitação criada com sucesso",
             request,
         };
     }
@@ -52,7 +52,7 @@ class RequestsService {
             var _a, _b, _c, _d, _e, _f, _g, _h;
             return ({
                 id: s.id_order,
-                solicitante: {
+                applicant: {
                     name: (_b = (_a = s.users) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : null,
                     phone: (_d = (_c = s.users) === null || _c === void 0 ? void 0 : _c.phone) !== null && _d !== void 0 ? _d : null,
                     cpf: (_f = (_e = s.users) === null || _e === void 0 ? void 0 : _e.cpf) !== null && _f !== void 0 ? _f : null,
