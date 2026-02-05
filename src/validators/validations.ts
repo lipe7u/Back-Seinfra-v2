@@ -18,15 +18,15 @@ const validationsMessages = {
 
 
 export const CreateRequestSchema = z.object({
-  endereco: z.string()
+  address: z.string()
     .min(1,validationsMessages.Endereco.Required)
     .min(5, validationsMessages.Endereco.Min)
     .max(300, validationsMessages.Endereco.Max),
   
-    pontoReferencia: z.string()
+    landmark: z.string()
     .optional(),
   
-    descricao: z.string()
+    description: z.string()
     .min(1, validationsMessages.Descricao.Required)
     .min(10,validationsMessages.Descricao.Min)
     .max(1000, validationsMessages.Descricao.Max),
