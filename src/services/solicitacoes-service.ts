@@ -21,7 +21,7 @@ export class RequestsService {
     
     return {
       id: request.id_order,
-      mensagem: "Solicitação criada com sucesso",
+      message: "Solicitação criada com sucesso",
       request,
     };
   }
@@ -56,7 +56,7 @@ export class RequestsService {
 
     const formattedRequests: FormattedRequest[] = requests.map((s: typeof requests[number]) => ({
       id: s.id_order,
-      solicitante: {
+      applicant: {
         name: s.users?.name ?? null,
         phone: s.users?.phone ?? null,
         cpf: s.users?.cpf ?? null,
