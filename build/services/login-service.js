@@ -39,15 +39,15 @@ const server_1 = require("../server");
 const loginUserService = async (app, data) => {
     try {
         const user = data.cpf
-            ? await server_1.prisma.usuarios.findUnique({ where: { cpf: data.cpf } })
-            : await server_1.prisma.usuarios.findFirst({ where: { telefone: data.phone } });
+            ? await server_1.prisma.users.findUnique({ where: { cpf: data.cpf } })
+            : await server_1.prisma.users.findFirst({ where: { phone: data.phone } });
         if (!user) {
             throw new Error("Usuário não encontrado");
         }
-        if (!user.senha_hash) {
+        if (!user.password_hash) {
             throw new Error("Senha não encontrada");
         }
-        const isPasswordValid = await bcrypt.compare(data.password, user.senha_hash);
+        const isPasswordValid = await bcrypt.compare(data.password, user.password_hash);
         if (!isPasswordValid) {
             throw new Error("Erro no credenciamento");
         }
@@ -61,13 +61,13 @@ const loginUserService = async (app, data) => {
 };
 exports.loginUserService = loginUserService;
 const loginAdminService = async (app, data) => {
-    const admin = await server_1.prisma.usuarios.findUnique({
+    const admin = await server_1.prisma.users.findUnique({
         where: { cpf: data.cpf },
     });
     if (!admin || !admin.Admin) {
         throw new Error("Admin não encontrado");
     }
-    const validPassword = await bcrypt.compare(data.password, admin.senha_hash || "");
+    const validPassword = await bcrypt.compare(data.password, admin.password_hash || "");
     if (!validPassword) {
         throw new Error("Senha incorreta");
     }

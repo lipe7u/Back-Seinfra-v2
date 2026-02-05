@@ -43,19 +43,19 @@ const registerUserService = async (data) => {
         if (!(0, cpf_validation_1.cpfValidation)(cleanCpf)) {
             throw new Error("Cpf inválido");
         }
-        const existingCpf = await server_1.prisma.usuarios.findUnique({
+        const existingCpf = await server_1.prisma.users.findUnique({
             where: { cpf: cleanCpf }
         });
         if (existingCpf) {
             throw new Error("CPF já cadastrado");
         }
         const passwordHashed = await bcrypt.hash(data.password, 10);
-        const user = await server_1.prisma.usuarios.create({
+        const user = await server_1.prisma.users.create({
             data: {
                 cpf: data.cpf,
-                nome: data.name,
-                telefone: data.phone,
-                senha_hash: passwordHashed,
+                name: data.name,
+                phone: data.phone,
+                password_hash: passwordHashed,
             },
         });
         return user;
@@ -72,18 +72,18 @@ const registerAdminService = async (data) => {
         if (!(0, cpf_validation_1.cpfValidation)(cleanCpf)) {
             throw new Error("Cpf inválido");
         }
-        const existingCpf = await server_1.prisma.usuarios.findUnique({
+        const existingCpf = await server_1.prisma.users.findUnique({
             where: { cpf: cleanCpf }
         });
         if (existingCpf) {
             throw new Error("CPF já cadastrado");
         }
         const passwordHashed = await bcrypt.hash(data.password, 10);
-        const admin = await server_1.prisma.usuarios.create({
+        const admin = await server_1.prisma.users.create({
             data: {
                 cpf: data.cpf,
-                senha_hash: passwordHashed,
-                telefone: data.phone,
+                password_hash: passwordHashed,
+                phone: data.phone,
                 Admin: true,
             },
         });

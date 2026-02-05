@@ -88,7 +88,7 @@ exports.app.addHook("preHandler", async (request, reply) => {
 });
 exports.app.register(cors_1.default, {
     origin: true,
-    credentials: true
+    credentials: true,
 });
 const port = Number(process.env.PORT) || 3000;
 const start = async () => {
