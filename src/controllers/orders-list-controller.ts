@@ -25,7 +25,7 @@ export const requestOrdersInfo = async(
     reply.send(ordersAndServices.filter((ordem:typeof ordersAndServices[number]) => ordem.status === "CONCLUIDO"))
   }
   else if (!isNaN(Number(info.message))) {
-    reply.send(ordersAndServices.filter((ordem: typeof ordersAndServices[number]) => ordem.id_order === Number(info.mensagem)))
+    reply.send(ordersAndServices.filter((ordem: typeof ordersAndServices[number]) => ordem.id_order === Number(info.message)))
   }
 }
 
