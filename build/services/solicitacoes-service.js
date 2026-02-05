@@ -57,7 +57,7 @@ class RequestsService {
                     phone: (_d = (_c = s.users) === null || _c === void 0 ? void 0 : _c.phone) !== null && _d !== void 0 ? _d : null,
                     cpf: (_f = (_e = s.users) === null || _e === void 0 ? void 0 : _e.cpf) !== null && _f !== void 0 ? _f : null,
                 },
-                adress: s.address,
+                address: s.address,
                 reference: s.reference,
                 problem: s.description.slice(0, 200) + (s.description.length > 200 ? "..." : ""),
                 status: this.formatStatus(s.status),

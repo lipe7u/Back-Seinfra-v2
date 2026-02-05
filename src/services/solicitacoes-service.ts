@@ -61,7 +61,7 @@ export class RequestsService {
         phone: s.users?.phone ?? null,
         cpf: s.users?.cpf ?? null,
       },
-      adress: s.address, 
+      address: s.address, 
       reference: s.reference,
       problem: s.description.slice(0, 200) + (s.description.length > 200 ? "..." : ""),
       status: this.formatStatus(s.status),
