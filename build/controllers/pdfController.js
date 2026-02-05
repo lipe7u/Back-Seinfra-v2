@@ -14,30 +14,30 @@ const generateRequestsPdf = async (request, reply) => {
         }
         const start = new Date(`${startDate}T00:00:00`);
         const end = new Date(`${endDate}T23:59:59.999`);
-        const requests = await server_1.prisma.registro_ordens.findMany({
+        const requests = await server_1.prisma.record_orders.findMany({
             where: {
                 status: "CONCLUIDO",
-                data_criacao: {
+                creation_date: {
                     gte: start,
                     lte: end,
                 },
             },
             orderBy: {
-                data_criacao: "asc",
+                creation_date: "asc",
             },
             select: {
-                id_ordem: true,
-                endereco: true,
-                referencia: true,
-                descricao: true,
+                id_order: true,
+                address: true,
+                reference: true,
+                description: true,
                 status: true,
-                data_criacao: true,
-                data_conclusao: true,
-                usuarios: {
+                creation_date: true,
+                concluded_date: true,
+                users: {
                     select: {
-                        nome: true,
+                        name: true,
                         cpf: true,
-                        telefone: true,
+                        phone: true,
                     },
                 },
             },
@@ -76,21 +76,21 @@ const generateRequestsPdf = async (request, reply) => {
         y -= 20;
         for (const request of requests) {
             drawText("--------------------------------------------------");
-            drawText(`OS Nº: ${request.id_ordem}`, 13);
+            drawText(`OS Nº: ${request.id_order}`, 13);
             y -= 4;
-            drawText(`Solicitante: ${(_b = (_a = request.usuarios) === null || _a === void 0 ? void 0 : _a.nome) !== null && _b !== void 0 ? _b : "Não informado"}`);
-            drawText(`CPF: ${(_d = (_c = request.usuarios) === null || _c === void 0 ? void 0 : _c.cpf) !== null && _d !== void 0 ? _d : "Não informado"}`);
-            drawText(`Telefone: ${(_f = (_e = request.usuarios) === null || _e === void 0 ? void 0 : _e.telefone) !== null && _f !== void 0 ? _f : "Não informado"}`);
+            drawText(`Solicitante: ${(_b = (_a = request.users) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : "Não informado"}`);
+            drawText(`CPF: ${(_d = (_c = request.users) === null || _c === void 0 ? void 0 : _c.cpf) !== null && _d !== void 0 ? _d : "Não informado"}`);
+            drawText(`Telefone: ${(_f = (_e = request.users) === null || _e === void 0 ? void 0 : _e.phone) !== null && _f !== void 0 ? _f : "Não informado"}`);
             y -= 6;
-            drawText(`Endereço: ${request.endereco}`);
-            drawText(`Referência: ${(_g = request.referencia) !== null && _g !== void 0 ? _g : "Não informado"}`);
-            drawText(`Descrição: ${request.descricao}`);
+            drawText(`Endereço: ${request.address}`);
+            drawText(`Referência: ${(_g = request.reference) !== null && _g !== void 0 ? _g : "Não informado"}`);
+            drawText(`Descrição: ${request.description}`);
             drawText(`Status: ${request.status}`);
-            drawText(`Data de Criação: ${request.data_criacao
-                ? request.data_criacao.toLocaleDateString("pt-BR")
+            drawText(`Data de Criação: ${request.creation_date
+                ? request.creation_date.toLocaleDateString("pt-BR")
                 : "-"}`);
-            drawText(`Data de Conclusão: ${request.data_conclusao
-                ? request.data_conclusao.toLocaleDateString("pt-BR")
+            drawText(`Data de Conclusão: ${request.concluded_date
+                ? request.concluded_date.toLocaleDateString("pt-BR")
                 : "Não informada"}`);
             y -= 12;
         }
