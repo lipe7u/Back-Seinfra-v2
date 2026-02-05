@@ -23,7 +23,7 @@ export const CreateRequestSchema = z.object({
     .min(5, validationsMessages.Endereco.Min)
     .max(300, validationsMessages.Endereco.Max),
   
-    landmark: z.string()
+    reference: z.string()
     .optional(),
   
     description: z.string()
