@@ -20,7 +20,7 @@ const requestOrdersInfo = async (request, reply) => {
         reply.send(ordersAndServices.filter((ordem) => ordem.status === "CONCLUIDO"));
     }
     else if (!isNaN(Number(info.message))) {
-        reply.send(ordersAndServices.filter((ordem) => ordem.id_order === Number(info.mensagem)));
+        reply.send(ordersAndServices.filter((ordem) => ordem.id_order === Number(info.message)));
     }
 };
 exports.requestOrdersInfo = requestOrdersInfo;
