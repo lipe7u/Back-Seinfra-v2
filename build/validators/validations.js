@@ -18,13 +18,13 @@ const validationsMessages = {
     }
 };
 exports.CreateRequestSchema = zod_1.z.object({
-    endereco: zod_1.z.string()
+    address: zod_1.z.string()
         .min(1, validationsMessages.Endereco.Required)
         .min(5, validationsMessages.Endereco.Min)
         .max(300, validationsMessages.Endereco.Max),
-    pontoReferencia: zod_1.z.string()
+    landmark: zod_1.z.string()
         .optional(),
-    descricao: zod_1.z.string()
+    description: zod_1.z.string()
         .min(1, validationsMessages.Descricao.Required)
         .min(10, validationsMessages.Descricao.Min)
         .max(1000, validationsMessages.Descricao.Max),
