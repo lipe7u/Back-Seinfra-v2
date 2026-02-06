@@ -8,7 +8,7 @@ const login = async (request, reply) => {
         reply.setCookie("token", token, {
             httpOnly: true,
             secure: true,
-            maxAge: 24 * 60 * 60,
+            maxAge: 2 * 60 * 60 * 1000,
             sameSite: "none",
             path: "/"
         }).send({ success: true });
