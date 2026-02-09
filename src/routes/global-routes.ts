@@ -20,6 +20,6 @@ export default async function GlobalRoutes(app: FastifyInstance) {
   app.get("/gerarPdfSolicitacoes", generateRequestsPdf);
   app.get("/solicitarOrdens", requestOrdersInfo);
   app.post("/cancelarOrdem", cancelOrder);
-  app.post("/changeOrderStatus", changeStatusOrder)
+  app.post("/alterarStatusOrdem", changeStatusOrder)
   app.post("/login-admin", loginAdmin);
 }
