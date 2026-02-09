@@ -56,7 +56,7 @@ export class RequestsService {
 
     const formattedRequests: FormattedRequest[] = requests.map((s: typeof requests[number]) => ({
       id: s.id_order,
-      applicant: {
+      users: {
         name: s.users?.name ?? null,
         phone: s.users?.phone ?? null,
         cpf: s.users?.cpf ?? null,
@@ -79,7 +79,7 @@ export class RequestsService {
       PENDENTE: "Pendente",
     };
 
-    return statusMap[status] || status;
+     return statusMap[status] || status;
   }
 
 }
