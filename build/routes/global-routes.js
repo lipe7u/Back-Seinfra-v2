@@ -18,6 +18,6 @@ async function GlobalRoutes(app) {
     app.get("/gerarPdfSolicitacoes", pdfController_1.generateRequestsPdf);
     app.get("/solicitarOrdens", orders_list_controller_2.requestOrdersInfo);
     app.post("/cancelarOrdem", orders_list_controller_1.cancelOrder);
-    app.post("/changeOrderStatus", orders_list_controller_1.changeStatusOrder);
+    app.post("/alterarStatusOrdem", orders_list_controller_1.changeStatusOrder);
     app.post("/login-admin", login_admin_controller_1.loginAdmin);
 }
