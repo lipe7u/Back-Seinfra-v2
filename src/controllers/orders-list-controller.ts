@@ -11,6 +11,15 @@ export const requestOrdersInfo = async(
   const ordersAndServices = await prisma.record_orders.findMany({
     orderBy: {
       creation_date: 'desc'
+    },
+    include: {
+      users: {
+        select: {
+          name: true,
+          phone: true,
+          cpf: true,
+        }
+      }
     }
   });
 
