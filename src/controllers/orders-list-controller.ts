@@ -6,7 +6,6 @@ export const requestOrdersInfo = async(
   request: FastifyRequest,
   reply: FastifyReply,
 ) => {
-
   const info = ordersqueryschema.parse(request.query);
   const ordersAndServices = await prisma.record_orders.findMany({
     orderBy: {
@@ -40,7 +39,7 @@ export const requestOrdersInfo = async(
 
 export const cancelOrder = async (request: FastifyRequest, reply: FastifyReply) => {
     const body = request.body as { id_order?: number; justification?: string };
-
+    
     if (!body.id_order) {
       reply.status(400).send('é preciso do ID da ordem para cancelar');
       return;
@@ -63,7 +62,8 @@ export const cancelOrder = async (request: FastifyRequest, reply: FastifyReply) 
       where: { id_order: Number(body.id_order) },
       data: {
         status: "CANCELADO",
-        justification: body.justification
+        justification: body.justification,
+        concluded_date: new Date(),
       }
     });
 
@@ -76,12 +76,21 @@ export const changeStatusOrder = async (
 ) => {
   const body = request.body as {
     id_order?: number;
-    status?: "PENDENTE" | "EM_EXECUCAO" | "CONCLUIDO";
+    status?: "PENDENTE" | "EM_EXECUCAO" | "CONCLUIDO" | "CANCELADO";
   };
-
+  
   if (!body.id_order|| !body.status) {
     return reply.status(400).send("ID da ordem e status são obrigatórios");
   }
+
+  const updateData: any = {
+    status: body.status,
+  }
+
+  if (body.status === "CONCLUIDO" || body.status === "CANCELADO") {
+  updateData.concluded_date = new Date();
+}
+
 
   const order = await prisma.record_orders.findUnique({
     where: { id_order: body.id_order },
@@ -93,9 +102,7 @@ export const changeStatusOrder = async (
 
   const updateOrder = await prisma.record_orders.update({
     where: { id_order: body.id_order },
-    data: {
-      status: body.status,
-    },
+    data: updateData 
   });
 
   return reply.send({

@@ -13,8 +13,7 @@ class RequestsService {
                 address: body.address,
                 reference: body.reference,
                 description: body.description,
-                status: "PENDENTE",
-                creation_date: new Date(),
+                status: "PENDENTE"
             },
         });
         return {
@@ -61,8 +60,8 @@ class RequestsService {
                 reference: s.reference,
                 problem: s.description.slice(0, 200) + (s.description.length > 200 ? "..." : ""),
                 status: this.formatStatus(s.status),
-                dateRequest: s.creation_date ? s.creation_date.toLocaleDateString("pt-BR") : null,
-                dateRequestConcluded: (_h = (_g = s.concluded_date) === null || _g === void 0 ? void 0 : _g.toLocaleDateString("pt-BR")) !== null && _h !== void 0 ? _h : null,
+                dateRequest: s.creation_date ? s.creation_date.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }) : null,
+                dateRequestConcluded: (_h = (_g = s.concluded_date) === null || _g === void 0 ? void 0 : _g.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" })) !== null && _h !== void 0 ? _h : null,
             });
         });
         return formattedRequests;

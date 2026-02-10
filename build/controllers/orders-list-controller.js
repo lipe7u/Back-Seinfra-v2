@@ -54,7 +54,8 @@ const cancelOrder = async (request, reply) => {
         where: { id_order: Number(body.id_order) },
         data: {
             status: "CANCELADO",
-            justification: body.justification
+            justification: body.justification,
+            concluded_date: new Date(),
         }
     });
     reply.send(`ordem "${canceledOrder.id_order}" de descrição "${canceledOrder.description}" foi cancelada. -${canceledOrder.justification}`);
@@ -65,6 +66,12 @@ const changeStatusOrder = async (request, reply) => {
     if (!body.id_order || !body.status) {
         return reply.status(400).send("ID da ordem e status são obrigatórios");
     }
+    const updateData = {
+        status: body.status,
+    };
+    if (body.status === "CONCLUIDO" || body.status === "CANCELADO") {
+        updateData.concluded_date = new Date();
+    }
     const order = await server_1.prisma.record_orders.findUnique({
         where: { id_order: body.id_order },
     });
@@ -73,9 +80,7 @@ const changeStatusOrder = async (request, reply) => {
     }
     const updateOrder = await server_1.prisma.record_orders.update({
         where: { id_order: body.id_order },
-        data: {
-            status: body.status,
-        },
+        data: updateData
     });
     return reply.send({
         message: "Status atualizado com sucesso",
