@@ -8,6 +8,15 @@ const requestOrdersInfo = async (request, reply) => {
     const ordersAndServices = await server_1.prisma.record_orders.findMany({
         orderBy: {
             creation_date: 'desc'
+        },
+        include: {
+            users: {
+                select: {
+                    name: true,
+                    phone: true,
+                    cpf: true,
+                }
+            }
         }
     });
     if (info.message == "recente") {
