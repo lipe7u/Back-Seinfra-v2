@@ -13,8 +13,7 @@ class RequestsService {
                 address: body.address,
                 reference: body.reference,
                 description: body.description,
-                status: "PENDENTE",
-                creation_date: new Date(),
+                status: "PENDENTE"
             },
         });
         return {
