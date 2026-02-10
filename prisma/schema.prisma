@@ -16,8 +16,8 @@ model record_orders {
   reference     String?
   description     String
   status         String
-  creation_date   DateTime?        @default(now()) @db.Timestamp(6)
-  concluded_date DateTime?         
+  creation_date   DateTime?        @default(now()) @db.Timestamptz(6)
+  concluded_date DateTime?         @db.Timestamptz(6)
   justification  String?
   users       users?        @relation(fields: [id_applicant], references: [id_user], onDelete: NoAction, onUpdate: NoAction)
   sectors        sectors          @relation(fields: [sector_resp], references: [id_sector], onDelete: NoAction, onUpdate: NoAction)
