@@ -18,6 +18,16 @@ if (!process.env.JWT_SECRET) {
 
 app.register(fastifyCookie)
 
+app.register(fastifyCors, {
+  origin: [
+    "https://seinfra.com.br",
+    "https://www.seinfra.com.br",
+    "https://admin.seinfra.com.br"
+  ],
+  credentials: true,
+});
+
+
 app.register(fastifyJwt, {
   secret: process.env.JWT_SECRET,
   cookie: {
@@ -59,10 +69,6 @@ app.addHook("preHandler", async (request, reply) => {
   }
 });
 
-app.register(fastifyCors, {
-  origin: true,
-  credentials: true,
-});
 
 const port = Number(process.env.PORT) || 3000;
 

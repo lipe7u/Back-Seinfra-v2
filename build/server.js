@@ -51,6 +51,14 @@ if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET não encontrado no .env");
 }
 exports.app.register(cookie_1.default);
+exports.app.register(cors_1.default, {
+    origin: [
+        "https://seinfra.com.br",
+        "https://www.seinfra.com.br",
+        "https://admin.seinfra.com.br"
+    ],
+    credentials: true,
+});
 exports.app.register(fastify_jwt_1.default, {
     secret: process.env.JWT_SECRET,
     cookie: {
@@ -85,10 +93,6 @@ exports.app.addHook("preHandler", async (request, reply) => {
             message: "Token inválido ou ausente",
         });
     }
-});
-exports.app.register(cors_1.default, {
-    origin: true,
-    credentials: true,
 });
 const port = Number(process.env.PORT) || 3000;
 const start = async () => {
