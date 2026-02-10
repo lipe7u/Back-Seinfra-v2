@@ -65,8 +65,8 @@ export class RequestsService {
       reference: s.reference,
       problem: s.description.slice(0, 200) + (s.description.length > 200 ? "..." : ""),
       status: this.formatStatus(s.status),
-      dateRequest: s.creation_date ? s.creation_date.toLocaleDateString("pt-BR") : null,
-      dateRequestConcluded: s.concluded_date?.toLocaleDateString("pt-BR") ?? null,
+      dateRequest: s.creation_date ? s.creation_date.toLocaleDateString("pt-BR", {timeZone: "America/Sao_Paulo"} ) : null,
+      dateRequestConcluded: s.concluded_date?.toLocaleDateString("pt-BR", {timeZone: "America/Sao_Paulo"}) ?? null,
     }));
 
     return formattedRequests;
