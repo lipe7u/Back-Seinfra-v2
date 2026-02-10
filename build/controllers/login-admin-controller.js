@@ -9,6 +9,7 @@ const loginAdmin = async (request, reply) => {
             httpOnly: true,
             secure: true,
             maxAge: 2 * 60 * 60 * 1000,
+            domain: ".seinfra.com.br",
             sameSite: "none",
             path: "/"
         }).send({ success: true });
