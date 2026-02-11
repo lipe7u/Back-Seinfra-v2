@@ -8,8 +8,8 @@ const register = async (request, reply) => {
         reply.code(201).send(user);
     }
     catch (error) {
-        const MensagemDeError = error instanceof Error ? error.message : "Erro de registro de usuário";
-        reply.code(400).send({ error: MensagemDeError });
+        const errorMessage = error instanceof Error ? error.message : "Erro de registro de usuário";
+        reply.code(400).send({ error: errorMessage });
     }
 };
 exports.register = register;
