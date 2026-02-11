@@ -9,7 +9,9 @@ const pdfController_1 = require("../controllers/pdfController");
 const orders_list_controller_1 = require("../controllers/orders-list-controller");
 const orders_list_controller_2 = require("../controllers/orders-list-controller");
 const login_admin_controller_1 = require("../controllers/login-admin-controller");
+const me_controller_1 = require("../controllers/me-controller");
 async function GlobalRoutes(app) {
+    app.get("/me", me_controller_1.me);
     app.post("/registro", register_controller_1.register);
     app.post("/login", login_controller_1.login);
     app.post("/registro-admin", register_adm_controller_1.registerAdmin);
