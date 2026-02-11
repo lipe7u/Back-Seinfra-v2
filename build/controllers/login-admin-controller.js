@@ -8,7 +8,7 @@ const loginAdmin = async (request, reply) => {
         reply.setCookie("token", token, {
             httpOnly: true,
             secure: true,
-            maxAge: 2 * 60 * 60 * 1000,
+            maxAge: 2 * 60 * 60,
             domain: ".seinfra.com.br",
             sameSite: "none",
             path: "/"
