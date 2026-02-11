@@ -10,16 +10,18 @@ import { generateRequestsPdf } from "../controllers/pdfController";
 import { cancelOrder, changeStatusOrder } from "../controllers/orders-list-controller";
 import { requestOrdersInfo } from "../controllers/orders-list-controller";
 import { loginAdmin } from "../controllers/login-admin-controller";
+import { logout } from "../controllers/logout-controller";
 
 export default async function GlobalRoutes(app: FastifyInstance) {
   app.post("/registro", register);
   app.post("/login", login);
   app.post("/registro-admin", registerAdmin);
+  app.post("/login-admin", loginAdmin);
+  app.post("/logout", logout)
   app.post("/novaSolicitacao", CreateRequests);
   app.get("/minhas-solicitacoes", ListRequests);
   app.get("/gerarPdfSolicitacoes", generateRequestsPdf);
   app.get("/solicitarOrdens", requestOrdersInfo);
   app.post("/cancelarOrdem", cancelOrder);
   app.post("/alterarStatusOrdem", changeStatusOrder)
-  app.post("/login-admin", loginAdmin);
 }
