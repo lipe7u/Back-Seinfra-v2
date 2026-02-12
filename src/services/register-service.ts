@@ -28,10 +28,18 @@ export const registerUserService = async (data: RegisterB) => {
         password_hash: passwordHashed,
       },
     });
+    
     return user;
+  
   } catch (error) {
     console.error("Erro ao registrar usuário:", error);
-    throw new Error("Erro ao registrar usuário");
+    
+    if (error instanceof Error) {
+       throw error
+    }
+
+    throw new Error("Erro interno no servidor")
+
   }
 };
 
@@ -60,9 +68,17 @@ export const registerAdminService = async (data: RegisterAdminB) => {
         Admin: true,
       },
     });
+    
     return admin;
+  
   } catch (error) {
     console.error("Erro ao registrar admin:", error);
-    throw new Error("Erro ao registrar admin");
+   
+    if (error instanceof Error) {
+       throw error
+    }
+
+    throw new Error("Erro interno no servidor")
+
   }
 };

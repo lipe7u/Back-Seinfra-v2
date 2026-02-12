@@ -23,20 +23,29 @@ export const loginUserService = async (app: FastifyInstance, data: LoginB) => {
     }
 
     const token = app.jwt.sign({ id: user.id_user, Admin: user.Admin });
+    
     return token;
   } catch (error) {
     console.error("Erro ao fazer login:", error);
-    throw new Error("Erro ao fazer login");
+
+    if (error instanceof Error) { 
+       throw error
+    }
+    
+    throw new Error("Error interno no servidor")
   }
 };
+
 
 export const loginAdminService = async (app: FastifyInstance, data: LoginAdminB) => {
   const admin = await prisma.users.findUnique({
     where: { cpf: data.cpf },
   });
+
   if (!admin || !admin.Admin) {
     throw new Error("Admin não encontrado");
   }
+
   const validPassword = await bcrypt.compare(data.password, admin.password_hash || "");
   if (!validPassword) {
     throw new Error("Senha incorreta");

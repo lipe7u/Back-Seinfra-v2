@@ -56,7 +56,10 @@ const loginUserService = async (app, data) => {
     }
     catch (error) {
         console.error("Erro ao fazer login:", error);
-        throw new Error("Erro ao fazer login");
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error("Error interno no servidor");
     }
 };
 exports.loginUserService = loginUserService;
