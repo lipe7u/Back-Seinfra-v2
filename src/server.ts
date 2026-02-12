@@ -52,6 +52,7 @@ app.addHook("preHandler", async (request, reply) => {
     "/login",
     "/registro-admin",
     "/login-admin",
+    "/logout"
   ];
 
   if (publicRoutes.includes(route)) {
