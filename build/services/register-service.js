@@ -49,6 +49,12 @@ const registerUserService = async (data) => {
         if (existingCpf) {
             throw new Error("CPF já cadastrado");
         }
+        const existingPhone = await server_1.prisma.users.findUnique({
+            where: { phone: data.phone }
+        });
+        if (existingPhone) {
+            throw new Error("Número de telefone já cadastrado");
+        }
         const passwordHashed = await bcrypt.hash(data.password, 10);
         const user = await server_1.prisma.users.create({
             data: {
@@ -80,6 +86,12 @@ const registerAdminService = async (data) => {
         });
         if (existingCpf) {
             throw new Error("CPF já cadastrado");
+        }
+        const existingPhone = await server_1.prisma.users.findUnique({
+            where: { phone: data.phone }
+        });
+        if (existingPhone) {
+            throw new Error("Número de telefone já cadastrado");
         }
         const passwordHashed = await bcrypt.hash(data.password, 10);
         const admin = await server_1.prisma.users.create({

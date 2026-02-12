@@ -33,7 +33,7 @@ model sectors {
 model users {
   id_user         Int               @id @default(autoincrement())
   name            String?           @db.VarChar(200)
-  phone        String            @db.VarChar(20)
+  phone        String            @unique @db.VarChar(20)
   cpf             String            @unique @db.Char(11)
   password_hash      String?           @db.VarChar(60)
   Admin           Boolean           @default(false)

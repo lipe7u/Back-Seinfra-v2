@@ -18,6 +18,14 @@ export const registerUserService = async (data: RegisterB) => {
       throw new Error("CPF já cadastrado")
     }
 
+    const existingPhone = await prisma.users.findUnique({
+      where: { phone: data.phone }
+    })
+
+    if (existingPhone) {
+        throw new Error("Número de telefone já cadastrado")
+    }
+
     const passwordHashed = await bcrypt.hash(data.password, 10);
     
     const user = await prisma.users.create({
@@ -56,6 +64,14 @@ export const registerAdminService = async (data: RegisterAdminB) => {
 
     if (existingCpf) {
       throw new Error("CPF já cadastrado")
+    }
+
+    const existingPhone = await prisma.users.findUnique({
+      where: { phone: data.phone }
+    })
+
+    if (existingPhone) {
+        throw new Error("Número de telefone já cadastrado")
     }
     
     const passwordHashed = await bcrypt.hash(data.password, 10);
