@@ -11,7 +11,7 @@ export const loginAdmin = async (
     reply.setCookie("token", token, {
       httpOnly: true,
       secure: true,
-      maxAge: 2 * 60 * 60,
+      maxAge: 8 * 60 * 60,
       domain:".seinfra.com.br",
       sameSite: "none",
       path: "/"
