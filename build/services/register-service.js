@@ -62,7 +62,10 @@ const registerUserService = async (data) => {
     }
     catch (error) {
         console.error("Erro ao registrar usuário:", error);
-        throw new Error("Erro ao registrar usuário");
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error("Erro interno no servidor");
     }
 };
 exports.registerUserService = registerUserService;
@@ -91,7 +94,10 @@ const registerAdminService = async (data) => {
     }
     catch (error) {
         console.error("Erro ao registrar admin:", error);
-        throw new Error("Erro ao registrar admin");
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error("Erro interno no servidor");
     }
 };
 exports.registerAdminService = registerAdminService;
