@@ -68,7 +68,7 @@ const registerUserService = async (data) => {
                 cpf: true,
                 name: true,
                 phone: true,
-                Admin: true,
+                role: true,
             }
         });
         return user;
@@ -104,15 +104,17 @@ const registerAdminService = async (data) => {
         const admin = await server_1.prisma.users.create({
             data: {
                 cpf: data.cpf,
+                name: data.name,
                 password_hash: passwordHashed,
                 phone: data.phone,
-                Admin: true,
+                role: "ADMIN",
             },
             select: {
                 id_user: true,
                 cpf: true,
+                name: true,
                 phone: true,
-                Admin: true
+                role: true
             }
         });
         return admin;

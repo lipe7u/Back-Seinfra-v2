@@ -51,7 +51,7 @@ const loginUserService = async (app, data) => {
         if (!isPasswordValid) {
             throw new Error("Erro no credenciamento");
         }
-        const token = app.jwt.sign({ id: user.id_user, Admin: user.Admin });
+        const token = app.jwt.sign({ id: user.id_user, role: user.role });
         return token;
     }
     catch (error) {
@@ -67,14 +67,14 @@ const loginAdminService = async (app, data) => {
     const admin = await server_1.prisma.users.findUnique({
         where: { cpf: data.cpf },
     });
-    if (!admin || !admin.Admin) {
+    if (!admin || admin.role !== "ADMIN") {
         throw new Error("Admin não encontrado");
     }
     const validPassword = await bcrypt.compare(data.password, admin.password_hash || "");
     if (!validPassword) {
         throw new Error("Senha incorreta");
     }
-    const token = app.jwt.sign({ id: admin.id_user, Admin: admin.Admin });
+    const token = app.jwt.sign({ id: admin.id_user, role: admin.role });
     return token;
 };
 exports.loginAdminService = loginAdminService;

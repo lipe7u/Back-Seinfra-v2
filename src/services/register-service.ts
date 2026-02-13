@@ -40,7 +40,7 @@ export const registerUserService = async (data: RegisterB) => {
         cpf: true,
         name: true,
         phone: true,
-        Admin: true, 
+        role: true, 
       }
     });
     
@@ -86,15 +86,17 @@ export const registerAdminService = async (data: RegisterAdminB) => {
     const admin = await prisma.users.create({
       data: {
         cpf: data.cpf,
+        name: data.name,
         password_hash: passwordHashed,
         phone: data.phone,
-        Admin: true,
+        role: "ADMIN",
       },
       select: {
         id_user: true,
         cpf: true,
+        name: true,
         phone: true,
-        Admin: true
+        role: true
       }
     });
     

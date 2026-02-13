@@ -1,4 +1,4 @@
-import fastify from "fastify";
+import fastify, { FastifyReply, FastifyRequest } from "fastify";
 import fastifyCors from "@fastify/cors";
 import fastifyJwt from "fastify-jwt";
 import fastifyCookie from "@fastify/cookie";
@@ -36,6 +36,25 @@ app.register(fastifyJwt, {
   }
 });
 
+app.decorate("verifyAdmin", async (request: FastifyRequest, reply: FastifyReply) => {
+  try {
+    await request.jwtVerify()
+
+    if (request.user.role !== "ADMIN") {
+      return reply.code(403).send({
+        message: "Acesso restrito a administradores"
+      })
+    }
+  } catch {
+    return reply.code(401).send({
+      statusCode: 401,
+      error: "Unauthorized",
+      message: "Token inválido ou ausente"
+    })
+
+  }
+})
+
 app.register(authRoutes);
 
 // Log básico de requisição
@@ -50,8 +69,6 @@ app.addHook("preHandler", async (request, reply) => {
   const publicRoutes = [
     "/registro",
     "/login",
-    "/registro-admin",
-    "/login-admin",
     "/logout"
   ];
 
