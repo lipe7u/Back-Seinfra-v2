@@ -18,6 +18,7 @@ export interface LoginAdminB {
 
 export interface RegisterAdminB {
   cpf: string; 
+  name: string;
   password: string; 
   phone: string;
 }

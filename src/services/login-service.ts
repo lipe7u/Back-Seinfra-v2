@@ -22,7 +22,7 @@ export const loginUserService = async (app: FastifyInstance, data: LoginB) => {
       throw new Error("Erro no credenciamento");
     }
 
-    const token = app.jwt.sign({ id: user.id_user, Admin: user.Admin });
+    const token = app.jwt.sign({ id: user.id_user, role: user.role });
     
     return token;
   } catch (error) {
@@ -42,7 +42,7 @@ export const loginAdminService = async (app: FastifyInstance, data: LoginAdminB)
     where: { cpf: data.cpf },
   });
 
-  if (!admin || !admin.Admin) {
+  if (!admin || admin.role !== "ADMIN") {
     throw new Error("Admin não encontrado");
   }
 
@@ -50,7 +50,7 @@ export const loginAdminService = async (app: FastifyInstance, data: LoginAdminB)
   if (!validPassword) {
     throw new Error("Senha incorreta");
   }
-  const token = app.jwt.sign({id: admin.id_user, Admin: admin.Admin})
+  const token = app.jwt.sign({id: admin.id_user, role: admin.role})
   return token
 };
 

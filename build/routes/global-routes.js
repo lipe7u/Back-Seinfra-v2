@@ -15,13 +15,13 @@ async function GlobalRoutes(app) {
     app.get("/me", me_controller_1.me);
     app.post("/registro", register_controller_1.register);
     app.post("/login", login_controller_1.login);
-    app.post("/registro-admin", register_adm_controller_1.registerAdmin);
     app.post("/login-admin", login_admin_controller_1.loginAdmin);
     app.post("/logout", logout_controller_1.logout);
     app.post("/novaSolicitacao", solicitacoes_controller_1.CreateRequests);
     app.get("/minhas-solicitacoes", solicitacoes_controller_1.ListRequests);
-    app.get("/gerarPdfSolicitacoes", pdfController_1.generateRequestsPdf);
-    app.get("/solicitarOrdens", orders_list_controller_2.requestOrdersInfo);
-    app.post("/cancelarOrdem", orders_list_controller_1.cancelOrder);
-    app.post("/alterarStatusOrdem", orders_list_controller_1.changeStatusOrder);
+    app.post("/registro-admin", { preHandler: [app.verifyAdmin] }, register_adm_controller_1.registerAdmin);
+    app.get("/gerarPdfSolicitacoes", { preHandler: [app.verifyAdmin] }, pdfController_1.generateRequestsPdf);
+    app.get("/solicitarOrdens", { preHandler: [app.verifyAdmin] }, orders_list_controller_2.requestOrdersInfo);
+    app.post("/cancelarOrdem", { preHandler: [app.verifyAdmin] }, orders_list_controller_1.cancelOrder);
+    app.post("/alterarStatusOrdem", { preHandler: [app.verifyAdmin] }, orders_list_controller_1.changeStatusOrder);
 }

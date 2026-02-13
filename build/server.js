@@ -66,6 +66,23 @@ exports.app.register(fastify_jwt_1.default, {
         signed: false
     }
 });
+exports.app.decorate("verifyAdmin", async (request, reply) => {
+    try {
+        await request.jwtVerify();
+        if (request.user.role !== "ADMIN") {
+            return reply.code(403).send({
+                message: "Acesso restrito a administradores"
+            });
+        }
+    }
+    catch (_a) {
+        return reply.code(401).send({
+            statusCode: 401,
+            error: "Unauthorized",
+            message: "Token inválido ou ausente"
+        });
+    }
+});
 exports.app.register(global_routes_1.default);
 // Log básico de requisição
 exports.app.addHook("preHandler", async (request, reply) => {
@@ -77,8 +94,6 @@ exports.app.addHook("preHandler", async (request, reply) => {
     const publicRoutes = [
         "/registro",
         "/login",
-        "/registro-admin",
-        "/login-admin",
         "/logout"
     ];
     if (publicRoutes.includes(route)) {

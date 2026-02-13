@@ -11,7 +11,7 @@ export const CreateRequests = async (
 ) => {
   try {
     const body = CreateRequestSchema.parse(request.body);
-    const { id: userId } = request.user as { id: number; Admin: boolean };
+    const { id: userId } = request.user ;
     
     const result = await RequestsService.CreateRequest({
       body,
@@ -34,7 +34,7 @@ export const ListRequests  = async (
   reply: FastifyReply
 ) => {
   try {
-    const { id: id_user } = request.user as { id: number; Admin: boolean };
+    const { id: id_user } = request.user ;
     const requests = await RequestsService.ListRequests(id_user);
     return reply.send(requests)
 
