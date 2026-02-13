@@ -69,7 +69,8 @@ app.addHook("preHandler", async (request, reply) => {
   const publicRoutes = [
     "/registro",
     "/login",
-    "/logout"
+    "/logout",
+    "/login-admin"
   ];
 
   if (publicRoutes.includes(route)) {
