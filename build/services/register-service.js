@@ -63,6 +63,13 @@ const registerUserService = async (data) => {
                 phone: data.phone,
                 password_hash: passwordHashed,
             },
+            select: {
+                id_user: true,
+                cpf: true,
+                name: true,
+                phone: true,
+                Admin: true,
+            }
         });
         return user;
     }
@@ -101,6 +108,12 @@ const registerAdminService = async (data) => {
                 phone: data.phone,
                 Admin: true,
             },
+            select: {
+                id_user: true,
+                cpf: true,
+                phone: true,
+                Admin: true
+            }
         });
         return admin;
     }

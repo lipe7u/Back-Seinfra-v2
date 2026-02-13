@@ -35,6 +35,13 @@ export const registerUserService = async (data: RegisterB) => {
         phone: data.phone,
         password_hash: passwordHashed,
       },
+      select: {
+        id_user: true,
+        cpf: true,
+        name: true,
+        phone: true,
+        Admin: true, 
+      }
     });
     
     return user;
@@ -83,6 +90,12 @@ export const registerAdminService = async (data: RegisterAdminB) => {
         phone: data.phone,
         Admin: true,
       },
+      select: {
+        id_user: true,
+        cpf: true,
+        phone: true,
+        Admin: true
+      }
     });
     
     return admin;
